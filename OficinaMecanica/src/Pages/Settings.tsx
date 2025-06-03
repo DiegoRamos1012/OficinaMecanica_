@@ -15,7 +15,7 @@ import { AuthContext } from "../contexts/AuthContext";
 import Header from "../components/Header";
 
 const Settings = () => {
-  const { user, logout } = useContext(AuthContext);
+  const { logout } = useContext(AuthContext);
   const navigate = useNavigate();
 
   // Estado para as configurações
