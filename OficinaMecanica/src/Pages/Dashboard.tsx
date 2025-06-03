@@ -1,8 +1,10 @@
-import { useContext } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { Button } from 'primereact/button';
-import { Card } from 'primereact/card';
-import { AuthContext } from '../contexts/AuthContext';
+import { useContext } from "react";
+import { useNavigate } from "react-router-dom";
+import { Button } from "primereact/button";
+import { Card } from "primereact/card";
+import { Menu } from "primereact/menu";
+import type { MenuItem } from "primereact/menuitem";
+import { AuthContext } from "../contexts/AuthContext";
 
 const Dashboard = () => {
   const { logout } = useContext(AuthContext);
@@ -10,47 +12,111 @@ const Dashboard = () => {
 
   const handleLogout = () => {
     logout();
-    navigate('/login');
+    navigate("/login");
   };
 
+  const menuItems: MenuItem[] = [
+    {
+      label: "Dashboard",
+      icon: "pi pi-home",
+      command: () => navigate("/dashboard"),
+    },
+    {
+      label: "Estoque",
+      icon: "pi pi-box",
+      command: () => navigate("/estoque"),
+    },
+    {
+      label: "Funcionários",
+      icon: "pi pi-users",
+      command: () => navigate("/funcionarios"),
+    },
+    {
+      label: "Clientes",
+      icon: "pi pi-user",
+      command: () => navigate("/clientes"),
+    },
+    {
+      label: "Veículos",
+      icon: "pi pi-car",
+      command: () => navigate("/veiculos"),
+    },
+    {
+      label: "Serviços",
+      icon: "pi pi-wrench",
+      command: () => navigate("/servicos"),
+    },
+    {
+      label: "Relatórios",
+      icon: "pi pi-chart-bar",
+      command: () => navigate("/relatorios"),
+    },
+    {
+      separator: true,
+    },
+    {
+      label: "Sair",
+      icon: "pi pi-sign-out",
+      command: handleLogout,
+    },
+  ];
+
   return (
-    <div className="p-4">
-      <div className="flex justify-content-between align-items-center mb-4">
-        <h1>Auto Repair Shop Dashboard</h1>
-        <Button icon="pi pi-sign-out" label="Logout" onClick={handleLogout} className="p-button-danger" />
+    <div className="app-container">
+      <div className="sidebar">
+        <div className="sidebar-header">
+          <h2>Auto Repair Shop</h2>
+        </div>
+        <Menu model={menuItems} className="sidebar-menu" />
       </div>
-      
-      <div className="grid">
-        <div className="col-12 md:col-6 lg:col-3">
-          <Card title="Active Services" className="shadow-2">
-            <div className="text-4xl text-center">12</div>
-            <div className="text-center mt-3">Current services in progress</div>
+
+      <div className="main-content">
+        <div className="content-header">
+          <h1 className="content-title">Dashboard</h1>
+          <Button
+            icon="pi pi-sign-out"
+            label="Logout"
+            onClick={handleLogout}
+            className="p-button-danger"
+          />
+        </div>
+
+        <div className="grid">
+          <div className="col-12 md:col-6 lg:col-3">
+            <Card title="Serviços Ativos" className="dashboard-card">
+              <div className="text-4xl text-center">12</div>
+              <div className="text-center mt-3">Serviços em andamento</div>
+            </Card>
+          </div>
+          <div className="col-12 md:col-6 lg:col-3">
+            <Card title="Veículos" className="dashboard-card">
+              <div className="text-4xl text-center">45</div>
+              <div className="text-center mt-3">Veículos cadastrados</div>
+            </Card>
+          </div>
+          <div className="col-12 md:col-6 lg:col-3">
+            <Card title="Clientes" className="dashboard-card">
+              <div className="text-4xl text-center">28</div>
+              <div className="text-center mt-3">Clientes ativos</div>
+            </Card>
+          </div>
+          <div className="col-12 md:col-6 lg:col-3">
+            <Card title="Faturamento" className="dashboard-card">
+              <div className="text-4xl text-center">R$ 4.250</div>
+              <div className="text-center mt-3">Receita mensal</div>
+            </Card>
+          </div>
+        </div>
+
+        <div className="section-title">
+          <h2>Atividades Recentes</h2>
+        </div>
+
+        <div className="mt-4">
+          <Card title="Serviços Recentes" className="dashboard-card">
+            <p>Aqui você verá uma tabela de serviços recentes...</p>
           </Card>
         </div>
-        <div className="col-12 md:col-6 lg:col-3">
-          <Card title="Vehicles" className="shadow-2">
-            <div className="text-4xl text-center">45</div>
-            <div className="text-center mt-3">Registered vehicles</div>
-          </Card>
-        </div>
-        <div className="col-12 md:col-6 lg:col-3">
-          <Card title="Customers" className="shadow-2">
-            <div className="text-4xl text-center">28</div>
-            <div className="text-center mt-3">Active customers</div>
-          </Card>
-        </div>
-        <div className="col-12 md:col-6 lg:col-3">
-          <Card title="Revenue" className="shadow-2">
-            <div className="text-4xl text-center">$4,250</div>
-            <div className="text-center mt-3">Monthly revenue</div>
-          </Card>
-        </div>
-      </div>
-      
-      <div className="mt-4">
-        <Card title="Recent Services" className="shadow-2">
-          <p>Here you will display a table of recent services...</p>
-        </Card>
       </div>
     </div>
   );

@@ -42,7 +42,7 @@ body {
 
 /* Estilos de cabeçalho */
 h1 {
-  font-size: 3.2em;
+  font-size: 2.2em; /* Reduzido de 3.2em para 2.2em */
   line-height: 1.1;
 }
 
@@ -379,4 +379,352 @@ button:focus-visible {
   margin-top: 1rem;
   color: #7f8c8d;
   font-size: 0.7rem;
+}
+
+/* Dashboard Styles */
+.dashboard-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background-color: #f8f9fa;
+}
+
+.dashboard-content {
+  padding: 1rem 2rem;
+  width: 100%;
+}
+
+.dashboard-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.dashboard-title {
+  font-size: 1.8rem;
+  margin: 0;
+  color: #1a365d; /* Cor mais escura para melhor contraste */
+  font-weight: 600; /* Aumentar peso da fonte */
+  text-shadow: 0.5px 0.5px 0px rgba(0, 0, 0, 0.1); /* Sombra sutil para destaque */
+}
+
+.dashboard-card {
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1) !important; /* Sombra mais sutil */
+  border-radius: 8px !important; /* Reduzido de 10px para 8px */
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.dashboard-card:hover {
+  transform: translateY(-3px); /* Reduzido de -5px para -3px */
+  box-shadow: 0 5px 12px rgba(0, 0, 0, 0.15) !important; /* Ajustado */
+}
+
+.dashboard-card .p-card-title {
+  color: #1a365d; /* Azul escuro para melhor contraste */
+  font-size: 1.1rem; /* Aumentado levemente */
+  font-weight: 600;
+  position: relative;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid #edf2f7; /* Borda sutil */
+}
+
+.dashboard-card .p-card-title::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -1px;
+  width: 40px;
+  height: 2px;
+  background-color: #2a5298; /* Sublinhado colorido */
+}
+
+.dashboard-card .text-4xl {
+  font-size: 1.8rem !important; /* Reduzir tamanho dos números dos cards */
+}
+
+.dashboard-card .text-center.mt-3 {
+  font-size: 0.9rem; /* Reduzir descrição dos cards */
+  margin-top: 0.5rem !important; /* Reduzir margem superior */
+}
+
+/* App Layout Styles - ADJUSTMENT FOR SPACE REDUCTION */
+.app-container {
+  display: flex;
+  min-height: 100vh;
+  max-width: 100vw; /* Limite máximo de largura */
+  overflow-x: hidden; /* Prevenir barra de rolagem horizontal */
+  background-color: #f8f9fa;
+}
+
+.sidebar {
+  width: 200px; /* Mantido como antes */
+  background: linear-gradient(to bottom, #1e3c72, #2a5298); /* Gradiente azul vibrante */
+  color: white;
+  position: fixed;
+  height: 100vh;
+  overflow-y: auto;
+  transition: all 0.3s;
+  z-index: 1000;
+  box-shadow: 2px 0px 10px rgba(0, 0, 0, 0.2); /* Sombra para destacar */
+}
+
+.sidebar-header {
+  padding: 1rem 0.75rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.15); /* Borda mais visível */
+  text-align: center;
+  background-color: rgba(0, 0, 0, 0.15); /* Fundo levemente destacado */
+}
+
+.sidebar-header h2 {
+  margin: 0;
+  font-size: 1.1rem;
+  color: #ffffff;
+  font-weight: 600;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3); /* Sombra de texto para destaque */
+}
+
+.sidebar-menu {
+  background: transparent !important;
+  border: none !important;
+  width: 100% !important;
+  padding: 0 !important;
+}
+
+.sidebar-menu .p-menuitem {
+  margin: 2px 0;
+}
+
+.sidebar-menu .p-menuitem-link {
+  color: rgba(255, 255, 255, 0.9) !important; /* Cor mais brilhante */
+  padding: 0.65rem 1rem !important;
+  border-radius: 0 !important;
+  font-size: 0.9rem;
+  transition: all 0.2s ease;
+  border-left: 3px solid transparent; /* Borda para indicar seleção */
+}
+
+.sidebar-menu .p-menuitem-link:hover {
+  background: rgba(255, 255, 255, 0.15) !important; /* Hover mais visível */
+  color: white !important;
+  border-left: 3px solid #2dce89; /* Cor verde brilhante na borda ao passar o mouse */
+}
+
+.sidebar-menu .p-menuitem-link .p-menuitem-icon {
+  color: rgba(255, 255, 255, 0.8); /* Ícones mais brilhantes */
+  margin-right: 0.75rem;
+  font-size: 1rem; /* Tamanho consistente para ícones */
+  transition: all 0.2s ease;
+}
+
+.sidebar-menu .p-menuitem-link:hover .p-menuitem-icon {
+  color: #2dce89; /* Cor verde brilhante para ícones ao passar o mouse */
+  transform: translateX(3px); /* Pequena animação ao passar o mouse */
+}
+
+.sidebar-menu .p-menuitem-active > .p-menuitem-link {
+  background: rgba(45, 206, 137, 0.2) !important; /* Fundo verde transparente para item ativo */
+  color: white !important;
+  border-left: 3px solid #2dce89; /* Verde brilhante na borda do item ativo */
+}
+
+.sidebar-menu .p-menuitem-active > .p-menuitem-link .p-menuitem-icon {
+  color: #2dce89 !important; /* Verde brilhante para ícone do item ativo */
+}
+
+/* Item de menu "Sair" estilizado especialmente */
+.sidebar-menu .p-menuitem:last-child .p-menuitem-link {
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  margin-top: 4px;
+  color: #ff8d72 !important; /* Cor laranja/vermelha para "Sair" */
+}
+
+.sidebar-menu .p-menuitem:last-child .p-menuitem-link:hover {
+  background-color: rgba(255, 141, 114, 0.15) !important;
+  border-left: 3px solid #ff8d72; /* Cor laranja/vermelha na borda */
+}
+
+.sidebar-menu .p-menuitem:last-child .p-menuitem-link .p-menuitem-icon {
+  color: #ff8d72; /* Cor laranja/vermelha para o ícone "Sair" */
+}
+
+/* Barra de rolagem personalizada para o sidebar */
+.sidebar::-webkit-scrollbar {
+  width: 5px;
+}
+
+.sidebar::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.1);
+}
+
+.sidebar::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 10px;
+}
+
+.sidebar::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.5);
+}
+
+/* Ajustes para o conteúdo principal */
+.main-content {
+  flex: 1;
+  padding: 1rem 1.5rem;
+  margin-left: 200px; /* Mantido conforme o tamanho do sidebar */
+  transition: all 0.3s;
+  max-width: calc(100% - 200px);
+  overflow-x: hidden;
+}
+
+/* Ajustes para DataTable */
+.p-datatable .p-datatable-header {
+  padding: 0.5rem !important; /* Reduzir padding do header */
+  font-size: 0.9rem !important;
+}
+
+.p-datatable .p-datatable-thead > tr > th {
+  padding: 0.5rem 0.5rem !important; /* Reduzir padding dos headers da tabela */
+  font-size: 0.9rem !important;
+}
+
+.p-datatable .p-datatable-tbody > tr > td {
+  padding: 0.5rem 0.5rem !important; /* Reduzir padding das células */
+  font-size: 0.9rem !important;
+}
+
+/* Melhorar responsividade */
+.action-buttons .p-button-sm {
+  scale: 0.9; /* Reduzir escala dos botões de ação */
+}
+
+/* Responsive adjustments */
+@media screen and (max-width: 768px) {
+  .sidebar {
+    width: 0;
+    padding: 0;
+    transform: translateX(-200px); /* Ajustado para nova largura */
+  }
+
+  .sidebar.active {
+    width: 200px; /* Ajustado para nova largura */
+    transform: translateX(0);
+  }
+
+  .main-content {
+    margin-left: 0;
+    padding: 0.75rem; /* Reduzido de 1rem para 0.75rem */
+    max-width: 100%; /* Usar toda a largura disponível */
+  }
+
+  .content-header {
+    flex-direction: column;
+    align-items: flex-start;
+    margin-bottom: 0.75rem; /* Reduzido de 1rem para 0.75rem */
+  }
+
+  .content-title {
+    margin: 0.5rem 0;
+    font-size: 1.3rem; /* Reduzido de 1.5rem para 1.3rem */
+  }
+
+  .grid {
+    margin-left: -0.5rem !important;
+    margin-right: -0.5rem !important;
+  }
+  
+  .grid .col-12 {
+    padding: 0.5rem !important;
+  }
+}
+
+/* Ajuste da grade (grid) para espaçamentos menores */
+.grid {
+  margin-left: -0.75rem !important; /* Reduzido de padrão para -0.75rem */
+  margin-right: -0.75rem !important;
+}
+
+.grid > div {
+  padding: 0.75rem !important; /* Reduzido para criar cards mais próximos */
+}
+
+/* Content Header Improvements */
+.content-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 2px solid #2a5298; /* Borda mais espessa e colorida */
+}
+
+.content-title {
+  font-size: 1.6rem; /* Ajustado de 1.5rem */
+  margin: 0;
+  color: #1a365d; /* Azul escuro para melhor contraste */
+  font-weight: 700; /* Negrito para destacar */
+  position: relative;
+  padding-left: 0.5rem;
+  text-shadow: 0.5px 0.5px 0px rgba(0, 0, 0, 0.1);
+}
+
+.content-title::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.2rem;
+  bottom: 0.2rem;
+  width: 4px;
+  background: linear-gradient(to bottom, #1e3c72, #2a5298); /* Barra lateral colorida */
+  border-radius: 3px;
+}
+
+/* Section Title styles - Enhanced */
+.section-title {
+  margin: 2rem 0 1rem; /* Aumentado para dar mais espaço */
+  padding-bottom: 0.6rem;
+  border-bottom: 1px solid #c8d1db; /* Cor mais visível para a borda */
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.section-title::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -1px;
+  width: 80px;
+  height: 3px;
+  background: linear-gradient(to right, #2a5298, #5e81ac); /* Sublinhado gradiente */
+  border-radius: 3px;
+}
+
+.section-title h2 {
+  font-size: 1.4rem; /* Aumentado de 1.3rem */
+  color: #1a365d; /* Azul escuro para melhor contraste */
+  margin: 0;
+  font-weight: 600; /* Semi-bold para melhor leitura */
+  letter-spacing: 0.2px; /* Ligeiro espaçamento entre letras */
+  position: relative;
+  text-shadow: 0.5px 0.5px 0px rgba(0, 0, 0, 0.1);
+}
+
+/* Estilo para ícone opcional ao lado do título da seção */
+.section-title i.section-icon {
+  font-size: 1.1rem;
+  margin-right: 0.5rem;
+  color: #2a5298;
+}
+
+/* Estilo para badge/counter opcional ao lado do título */
+.section-title .section-badge {
+  margin-left: 0.8rem;
+  background-color: #edf2f7;
+  color: #2a5298;
+  font-size: 0.8rem;
+  padding: 0.2rem 0.6rem;
+  border-radius: 1rem;
+  font-weight: 600;
 }
