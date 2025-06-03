@@ -1,0 +1,382 @@
+/* Estilos globais */
+:root {
+  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+  color-scheme: light dark;
+  color: rgba(255, 255, 255, 0.87);
+  background-color: #242424;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Estilos do root */
+#root {
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  text-align: center;
+}
+
+/* Estilos de links */
+a {
+  font-weight: 500;
+  color: #646cff;
+  text-decoration: inherit;
+}
+a:hover {
+  color: #535bf2;
+}
+
+/* Estilos do body */
+body {
+  margin: 0;
+  padding: 0;
+  display: flex;
+  min-width: 100vw;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* Estilos de cabeçalho */
+h1 {
+  font-size: 3.2em;
+  line-height: 1.1;
+}
+
+/* Estilos de botão */
+button {
+  border-radius: 8px;
+  border: 1px solid transparent;
+  padding: 0.6em 1.2em;
+  font-size: 1em;
+  font-weight: 500;
+  font-family: inherit;
+  background-color: #1a1a1a;
+  cursor: pointer;
+  transition: border-color 0.25s;
+}
+button:hover {
+  border-color: #646cff;
+}
+button:focus,
+button:focus-visible {
+  outline: 4px auto -webkit-focus-ring-color;
+}
+
+/* Media query para tema claro */
+@media (prefers-color-scheme: light) {
+  :root {
+    color: #213547;
+    background-color: #ffffff;
+  }
+  a:hover {
+    color: #747bff;
+  }
+  button {
+    background-color: #f9f9f9;
+  }
+}
+
+/* Login Page Styles */
+.login-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  width: 100%;
+  background: url("/src/assets/images/fundo_oficina.jpg") no-repeat center
+    center;
+  background-size: cover;
+  padding: 0;
+}
+
+.login-card {
+  width: 100%;
+  max-width: 350px; /* Reduzido de 450px para 350px */
+  border-radius: 10px; /* Reduzido de 12px para 10px */
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1); /* Sombra mais leve */
+  overflow: hidden;
+  background-color: rgba(255, 255, 255, 0.9);
+}
+
+.login-card .p-card-title {
+  color: #2c3e50;
+  font-size: 1.5rem; /* Reduzido de 1.75rem para 1.5rem */
+  text-align: center;
+  margin-bottom: 1rem; /* Reduzido de 1.5rem para 1rem */
+  font-weight: 600;
+  border-bottom: 1px solid #eaeaea;
+  padding-bottom: 0.75rem; /* Reduzido de 1rem para 0.75rem */
+}
+
+.login-card .p-card-content {
+  padding: 0.75rem 1.5rem 1.5rem; /* Reduzido de 1rem 2rem 2rem para 0.75rem 1.5rem 1.5rem */
+}
+
+.login-form .field {
+  margin-bottom: 1rem; /* Reduzido de 1.5rem para 1rem */
+}
+
+.login-form .field label {
+  margin-bottom: 0.3rem; /* Reduzido de 0.5rem para 0.3rem */
+  font-size: 0.8rem; /* Reduzido de 0.875rem para 0.8rem */
+}
+
+.login-form .p-password,
+.login-form .p-inputtext {
+  width: 100% !important;
+  border-radius: 6px;
+  height: 2.25rem; /* Altura menor para os inputs */
+  font-size: 0.9rem; /* Tamanho de fonte menor */
+}
+
+/* Estilos específicos para o componente Password */
+.login-form .p-password {
+  display: block !important;
+  width: 100% !important;
+}
+
+.login-form .p-password .p-inputtext,
+.login-form .p-password input {
+  width: 100% !important;
+  box-sizing: border-box !important;
+}
+
+/* Forçar largura do wrapper do input */
+.login-form .p-password .p-password-input,
+.login-form .p-password .p-inputwrapper,
+.login-form .p-password .p-input-icon-right {
+  display: block !important;
+  width: 100% !important;
+}
+
+/* Posicionar o ícone de toggle mask sem afetar o tamanho do input */
+.login-form .p-password .p-input-icon-right > i {
+  position: absolute;
+  right: 0.75rem;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 2;
+}
+
+/* Adicionar padding-right extra para o texto não ficar sob o ícone */
+.login-form .p-password .p-inputtext {
+  padding-right: 2.5rem !important;
+}
+
+.login-form .p-button {
+  background-color: #2c3e50;
+  border-color: #2c3e50;
+  width: 100%;
+  margin-top: 1rem; /* Reduzido de 1.5rem para 1rem */
+  height: 2.5rem; /* Reduzido de 2.75rem para 2.5rem */
+  font-weight: 600;
+  font-size: 0.9rem; /* Tamanho de fonte menor */
+}
+
+.login-form .p-button:hover {
+  background-color: #1e2b38;
+  border-color: #1e2b38;
+}
+
+/* Estilos para o botão provisório de acesso direto */
+.direct-access-button {
+  margin-top: 0.5rem !important;
+  background-color: #f39c12 !important;
+  border-color: #f39c12 !important;
+}
+
+.direct-access-button:hover {
+  background-color: #e67e22 !important;
+  border-color: #e67e22 !important;
+}
+
+.login-error {
+  color: #e74c3c;
+  font-size: 0.875rem;
+  margin: 0.5rem 0;
+  text-align: left;
+}
+
+.login-logo {
+  text-align: center;
+  margin-bottom: 1rem;
+}
+
+.login-logo img {
+  max-width: 150px;
+  height: auto;
+}
+
+.login-footer {
+  text-align: center;
+  margin-top: 1rem; /* Reduzido de 1.5rem para 1rem */
+  color: #7f8c8d;
+  font-size: 0.7rem; /* Reduzido de 0.75rem para 0.7rem */
+}
+
+/* Estilo para o link de registro no login */
+.register-link {
+  text-align: center;
+  margin-top: 1rem;
+  font-size: 0.85rem;
+}
+
+.register-link a {
+  color: #2c3e50;
+  font-weight: 600;
+  text-decoration: underline;
+}
+
+.register-link a:hover {
+  color: #1e2b38;
+}
+
+/* Register Page Styles - reutilizando grande parte dos estilos do login */
+.register-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  width: 100%;
+  background: url("/src/assets/images/fundo_oficina.jpg") no-repeat center
+    center;
+  background-size: cover;
+  padding: 0;
+}
+
+.register-card {
+  width: 100%;
+  max-width: 350px;
+  border-radius: 10px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  background-color: rgba(255, 255, 255, 0.9);
+}
+
+.register-card .p-card-title {
+  color: #2c3e50;
+  font-size: 1.5rem;
+  text-align: center;
+  margin-bottom: 1rem;
+  font-weight: 600;
+  border-bottom: 1px solid #eaeaea;
+  padding-bottom: 0.75rem;
+}
+
+.register-card .p-card-content {
+  padding: 0.75rem 1.5rem 1.5rem;
+}
+
+.register-form .field {
+  margin-bottom: 1rem;
+}
+
+.register-form .field label {
+  display: block;
+  margin-bottom: 0.3rem;
+  font-weight: 500;
+  color: #2c3e50;
+  font-size: 0.8rem;
+}
+
+/* Aplicando os mesmos estilos do formulário de login */
+.register-form .p-password,
+.register-form .p-inputtext {
+  width: 100% !important;
+  border-radius: 6px;
+  height: 2.25rem;
+  font-size: 0.9rem;
+}
+
+/* Estilos específicos para o componente Password no formulário de registro */
+.register-form .p-password {
+  display: block !important;
+  width: 100% !important;
+}
+
+.register-form .p-password .p-inputtext,
+.register-form .p-password input {
+  width: 100% !important;
+  box-sizing: border-box !important;
+}
+
+/* Forçar largura do wrapper do input no formulário de registro */
+.register-form .p-password .p-password-input,
+.register-form .p-password .p-inputwrapper,
+.register-form .p-password .p-input-icon-right {
+  display: block !important;
+  width: 100% !important;
+}
+
+/* Posicionar o ícone de toggle mask no formulário de registro */
+.register-form .p-password .p-input-icon-right > i {
+  position: absolute;
+  right: 0.75rem;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 2;
+}
+
+/* Padding para o ícone no formulário de registro */
+.register-form .p-password .p-inputtext {
+  padding-right: 2.5rem !important;
+}
+
+.register-form .p-button {
+  background-color: #2c3e50;
+  border-color: #2c3e50;
+  width: 100%;
+  margin-top: 1rem;
+  font-weight: 600;
+  height: 2.5rem;
+  font-size: 0.9rem;
+}
+
+.register-form .p-button:hover {
+  background-color: #1e2b38;
+  border-color: #1e2b38;
+}
+
+.register-error {
+  color: #e74c3c;
+  font-size: 0.875rem;
+  margin: 0.5rem 0;
+  text-align: left;
+}
+
+.login-link {
+  text-align: center;
+  margin-top: 1rem;
+  font-size: 0.85rem;
+}
+
+.login-link a {
+  color: #2c3e50;
+  font-weight: 600;
+  text-decoration: underline;
+}
+
+.login-link a:hover {
+  color: #1e2b38;
+}
+
+.register-logo {
+  text-align: center;
+  margin-bottom: 1rem;
+}
+
+.register-logo img {
+  max-width: 150px;
+  height: auto;
+}
+
+.register-footer {
+  text-align: center;
+  margin-top: 1rem;
+  color: #7f8c8d;
+  font-size: 0.7rem;
+}
