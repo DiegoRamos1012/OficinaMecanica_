@@ -1,14 +1,15 @@
 import { useContext } from "react";
 import { useNavigate } from "react-router-dom";
-import { Button } from "primereact/button";
 import { Card } from "primereact/card";
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 import { Menu } from "primereact/menu";
 import type { MenuItem } from "primereact/menuitem";
 import { Tag } from "primereact/tag";
+import { Button } from "primereact/button";
 import { AuthContext } from "../contexts/AuthContext";
 import type { Veiculo } from "../types/types";
+import Header from "../components/Header";
 
 const Veiculos = () => {
   const { logout } = useContext(AuthContext);
@@ -17,6 +18,11 @@ const Veiculos = () => {
   const handleLogout = () => {
     logout();
     navigate("/login");
+  };
+
+  const handleNewVehicle = () => {
+    // Implementação futura para criar novo veículo
+    console.log("Criar novo veículo");
   };
 
   const menuItems: MenuItem[] = [
@@ -57,6 +63,11 @@ const Veiculos = () => {
     },
     {
       separator: true,
+    },
+    {
+      label: "Configurações",
+      icon: "pi pi-cog",
+      command: () => navigate("/settings"),
     },
     {
       label: "Sair",
@@ -180,22 +191,12 @@ const Veiculos = () => {
       </div>
 
       <div className="main-content">
-        <div className="content-header">
-          <h1 className="content-title">Controle de Veículos</h1>
-          <div>
-            <Button
-              label="Novo Veículo"
-              icon="pi pi-plus"
-              className="p-button-success mr-2"
-            />
-            <Button
-              icon="pi pi-sign-out"
-              label="Logout"
-              onClick={handleLogout}
-              className="p-button-danger"
-            />
-          </div>
-        </div>
+        <Header
+          title="Controle de Veículos"
+          showNewButton={true}
+          newButtonLabel="Novo Veículo"
+          onNewButtonClick={handleNewVehicle}
+        />
 
         <div className="grid">
           <div className="col-12 md:col-6 lg:col-3">

@@ -5,6 +5,7 @@ export type User = {
   email: string;
   name: string;
   roles: string[];
+  profileImage?: string; // Added profile image field
 };
 
 // Auth context interface

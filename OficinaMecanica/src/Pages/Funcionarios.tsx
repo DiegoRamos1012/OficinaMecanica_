@@ -1,14 +1,15 @@
 import { useContext } from "react";
 import { useNavigate } from "react-router-dom";
-import { Button } from "primereact/button";
 import { Card } from "primereact/card";
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 import { Menu } from "primereact/menu";
 import type { MenuItem } from "primereact/menuitem";
 import { Tag } from "primereact/tag";
+import { Button } from "primereact/button";
 import { AuthContext } from "../contexts/AuthContext";
 import type { Funcionario } from "../types/types";
+import Header from "../components/Header";
 
 const Funcionarios = () => {
   const { logout } = useContext(AuthContext);
@@ -17,6 +18,11 @@ const Funcionarios = () => {
   const handleLogout = () => {
     logout();
     navigate("/login");
+  };
+
+  const handleNewEmployee = () => {
+    // Implementação futura para criar novo funcionário
+    console.log("Criar novo funcionário");
   };
 
   const menuItems: MenuItem[] = [
@@ -54,6 +60,14 @@ const Funcionarios = () => {
       label: "Relatórios",
       icon: "pi pi-chart-bar",
       command: () => navigate("/relatorios"),
+    },
+    {
+      separator: true,
+    },
+    {
+      label: "Configurações",
+      icon: "pi pi-cog",
+      command: () => navigate("/settings"),
     },
     {
       label: "Sair",
@@ -155,22 +169,12 @@ const Funcionarios = () => {
       </div>
 
       <div className="main-content">
-        <div className="content-header">
-          <h1 className="content-title">Gestão de Funcionários</h1>
-          <div>
-            <Button
-              label="Novo Funcionário"
-              icon="pi pi-plus"
-              className="p-button-success mr-2"
-            />
-            <Button
-              icon="pi pi-sign-out"
-              label="Logout"
-              onClick={handleLogout}
-              className="p-button-danger"
-            />
-          </div>
-        </div>
+        <Header
+          title="Gestão de Funcionários"
+          showNewButton={true}
+          newButtonLabel="Novo Funcionário"
+          onNewButtonClick={handleNewEmployee}
+        />
 
         <div className="grid">
           <div className="col-12 md:col-6 lg:col-3">

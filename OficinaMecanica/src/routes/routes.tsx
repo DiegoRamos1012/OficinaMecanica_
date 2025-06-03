@@ -8,6 +8,7 @@ import Estoque from "../Pages/Estoque";
 import Funcionarios from "../Pages/Funcionarios";
 import Clientes from "../Pages/Clientes";
 import Veiculos from "../Pages/Veiculos";
+import Settings from "../Pages/Settings";
 
 // Protected route component that checks authentication
 export const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
@@ -98,6 +99,14 @@ const AppRoutes = () => {
         element={
           <ProtectedRoute>
             <Veiculos />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/settings"
+        element={
+          <ProtectedRoute>
+            <Settings />
           </ProtectedRoute>
         }
       />

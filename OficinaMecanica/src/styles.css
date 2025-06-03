@@ -461,7 +461,11 @@ button:focus-visible {
 
 .sidebar {
   width: 200px; /* Mantido como antes */
-  background: linear-gradient(to bottom, #1e3c72, #2a5298); /* Gradiente azul vibrante */
+  background: linear-gradient(
+    to bottom,
+    #1e3c72,
+    #2a5298
+  ); /* Gradiente azul vibrante */
   color: white;
   position: fixed;
   height: 100vh;
@@ -525,7 +529,12 @@ button:focus-visible {
 }
 
 .sidebar-menu .p-menuitem-active > .p-menuitem-link {
-  background: rgba(45, 206, 137, 0.2) !important; /* Fundo verde transparente para item ativo */
+  background: rgba(
+    45,
+    206,
+    137,
+    0.2
+  ) !important; /* Fundo verde transparente para item ativo */
   color: white !important;
   border-left: 3px solid #2dce89; /* Verde brilhante na borda do item ativo */
 }
@@ -633,7 +642,7 @@ button:focus-visible {
     margin-left: -0.5rem !important;
     margin-right: -0.5rem !important;
   }
-  
+
   .grid .col-12 {
     padding: 0.5rem !important;
   }
@@ -676,7 +685,11 @@ button:focus-visible {
   top: 0.2rem;
   bottom: 0.2rem;
   width: 4px;
-  background: linear-gradient(to bottom, #1e3c72, #2a5298); /* Barra lateral colorida */
+  background: linear-gradient(
+    to bottom,
+    #1e3c72,
+    #2a5298
+  ); /* Barra lateral colorida */
   border-radius: 3px;
 }
 
@@ -697,7 +710,11 @@ button:focus-visible {
   bottom: -1px;
   width: 80px;
   height: 3px;
-  background: linear-gradient(to right, #2a5298, #5e81ac); /* Sublinhado gradiente */
+  background: linear-gradient(
+    to right,
+    #2a5298,
+    #5e81ac
+  ); /* Sublinhado gradiente */
   border-radius: 3px;
 }
 
@@ -727,4 +744,124 @@ button:focus-visible {
   padding: 0.2rem 0.6rem;
   border-radius: 1rem;
   font-weight: 600;
+}
+
+/* Settings Page Styles */
+.p-tabview .p-tabview-nav {
+  border-color: #dee2e6;
+}
+
+.p-tabview .p-tabview-nav li .p-tabview-nav-link {
+  padding: 0.75rem 1.25rem;
+  font-weight: 600;
+  border-color: #dee2e6;
+  color: #495057;
+  transition: all 0.2s;
+}
+
+.p-tabview .p-tabview-nav li .p-tabview-nav-link:hover {
+  background-color: #f8f9fa;
+}
+
+.p-tabview .p-tabview-nav li.p-highlight .p-tabview-nav-link {
+  background-color: #ffffff;
+  border-color: #2a5298;
+  color: #2a5298;
+  border-bottom-color: #2a5298;
+}
+
+.p-tabview .p-tabview-panels {
+  padding: 1.25rem 0;
+}
+
+.p-fileupload-buttonbar .p-button {
+  background-color: #2a5298;
+  border-color: #2a5298;
+}
+
+.p-fileupload-buttonbar .p-button:hover {
+  background-color: #1e3c72;
+  border-color: #1e3c72;
+}
+
+.p-avatar.p-avatar-xlarge {
+  width: 8rem;
+  height: 8rem;
+}
+
+.p-avatar.p-avatar-xlarge img {
+  width: 8rem;
+}
+
+/* Ajustes específicos para páginas de configurações */
+.settings-card {
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1) !important;
+  border-radius: 8px !important;
+}
+
+.settings-form-row {
+  display: flex;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.settings-form-row label {
+  flex: 1;
+  margin-bottom: 0;
+}
+
+.settings-form-row .p-inputswitch {
+  flex: 0;
+}
+
+.settings-profile-image {
+  position: relative;
+  display: inline-block;
+}
+
+.settings-profile-image .change-photo-button {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+}
+
+/* Header Component Styles */
+.header-actions {
+  display: flex;
+  align-items: center;
+}
+
+.user-profile {
+  display: flex;
+  align-items: center;
+  padding: 0.5rem 0.75rem;
+  background-color: rgba(42, 82, 152, 0.1);
+  border-radius: 2rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.user-profile:hover {
+  background-color: rgba(42, 82, 152, 0.2);
+}
+
+.user-name {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #1a365d;
+}
+
+.header-avatar {
+  width: 2rem !important;
+  height: 2rem !important;
+}
+
+/* Content Header with standardized styling */
+.content-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 2px solid #2a5298;
 }

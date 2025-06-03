@@ -1,10 +1,10 @@
 import { useContext } from "react";
 import { useNavigate } from "react-router-dom";
-import { Button } from "primereact/button";
 import { Card } from "primereact/card";
 import { Menu } from "primereact/menu";
 import type { MenuItem } from "primereact/menuitem";
 import { AuthContext } from "../contexts/AuthContext";
+import Header from "../components/Header";
 
 const Dashboard = () => {
   const { logout } = useContext(AuthContext);
@@ -55,6 +55,11 @@ const Dashboard = () => {
       separator: true,
     },
     {
+      label: "Configurações",
+      icon: "pi pi-cog",
+      command: () => navigate("/settings"),
+    },
+    {
       label: "Sair",
       icon: "pi pi-sign-out",
       command: handleLogout,
@@ -71,15 +76,7 @@ const Dashboard = () => {
       </div>
 
       <div className="main-content">
-        <div className="content-header">
-          <h1 className="content-title">Dashboard</h1>
-          <Button
-            icon="pi pi-sign-out"
-            label="Logout"
-            onClick={handleLogout}
-            className="p-button-danger"
-          />
-        </div>
+        <Header title="Dashboard" />
 
         <div className="grid">
           <div className="col-12 md:col-6 lg:col-3">
