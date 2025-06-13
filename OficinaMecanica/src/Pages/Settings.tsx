@@ -1,8 +1,6 @@
-import { useContext, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useState } from "react";
 import { Button } from "primereact/button";
 import { Card } from "primereact/card";
-import { Menu } from "primereact/menu";
 import { TabView, TabPanel } from "primereact/tabview";
 import { InputText } from "primereact/inputtext";
 import { Password } from "primereact/password";
@@ -10,14 +8,10 @@ import { Dropdown } from "primereact/dropdown";
 import { InputSwitch } from "primereact/inputswitch";
 import { Avatar } from "primereact/avatar";
 import { FileUpload } from "primereact/fileupload";
-import type { MenuItem } from "primereact/menuitem";
-import { AuthContext } from "../contexts/AuthContext";
 import Header from "../components/Header";
+import Sidebar from "../components/Sidebar";
 
 const Settings = () => {
-  const { logout } = useContext(AuthContext);
-  const navigate = useNavigate();
-
   // Estado para as configurações
   const [nome, setNome] = useState("Admin Usuário");
   const [email, setEmail] = useState("admin@autorepair.com");
@@ -43,11 +37,6 @@ const Settings = () => {
     { name: "Español", value: "es" },
   ];
 
-  const handleLogout = () => {
-    logout();
-    navigate("/login");
-  };
-
   const handleSaveProfile = () => {
     // Implementação futura para salvar o perfil
     alert("Perfil salvo com sucesso!");
@@ -58,65 +47,9 @@ const Settings = () => {
     alert("Preferências salvas com sucesso!");
   };
 
-  const menuItems: MenuItem[] = [
-    {
-      label: "Dashboard",
-      icon: "pi pi-home",
-      command: () => navigate("/dashboard"),
-    },
-    {
-      label: "Estoque",
-      icon: "pi pi-box",
-      command: () => navigate("/estoque"),
-    },
-    {
-      label: "Funcionários",
-      icon: "pi pi-users",
-      command: () => navigate("/funcionarios"),
-    },
-    {
-      label: "Clientes",
-      icon: "pi pi-user",
-      command: () => navigate("/clientes"),
-    },
-    {
-      label: "Veículos",
-      icon: "pi pi-car",
-      command: () => navigate("/veiculos"),
-    },
-    {
-      label: "Serviços",
-      icon: "pi pi-wrench",
-      command: () => navigate("/servicos"),
-    },
-    {
-      label: "Relatórios",
-      icon: "pi pi-chart-bar",
-      command: () => navigate("/relatorios"),
-    },
-    {
-      separator: true,
-    },
-    {
-      label: "Configurações",
-      icon: "pi pi-cog",
-      command: () => navigate("/settings"),
-    },
-    {
-      label: "Sair",
-      icon: "pi pi-sign-out",
-      command: handleLogout,
-    },
-  ];
-
   return (
     <div className="app-container">
-      <div className="sidebar">
-        <div className="sidebar-header">
-          <h2>Auto Repair Shop</h2>
-        </div>
-        <Menu model={menuItems} className="sidebar-menu" />
-      </div>
+      <Sidebar />
 
       <div className="main-content">
         <Header title="Configurações" />

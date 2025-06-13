@@ -1,12 +1,9 @@
-import { useContext } from "react";
-import { useNavigate } from "react-router-dom";
 import { Button } from "primereact/button";
 import { Card } from "primereact/card";
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
-import { Menu } from "primereact/menu";
-import type { MenuItem } from "primereact/menuitem";
-import { AuthContext } from "../contexts/AuthContext";
+import Header from "../components/Header";
+import Sidebar from "../components/Sidebar";
 
 interface Produto {
   id: number;
@@ -19,56 +16,10 @@ interface Produto {
 }
 
 const Estoque = () => {
-  const { logout } = useContext(AuthContext);
-  const navigate = useNavigate();
-
-  const handleLogout = () => {
-    logout();
-    navigate("/login");
+  const handleAddProduct = () => {
+    // Implementação futura para adicionar produto
+    console.log("Adicionar novo produto");
   };
-
-  const menuItems: MenuItem[] = [
-    {
-      label: "Dashboard",
-      icon: "pi pi-home",
-      command: () => navigate("/dashboard"),
-    },
-    {
-      label: "Estoque",
-      icon: "pi pi-box",
-      command: () => navigate("/estoque"),
-    },
-    {
-      label: "Funcionários",
-      icon: "pi pi-users",
-      command: () => navigate("/funcionarios"),
-    },
-    {
-      label: "Clientes",
-      icon: "pi pi-user",
-      command: () => navigate("/clientes"),
-    },
-    {
-      label: "Veículos",
-      icon: "pi pi-car",
-      command: () => navigate("/veiculos"),
-    },
-    {
-      label: "Serviços",
-      icon: "pi pi-wrench",
-      command: () => navigate("/servicos"),
-    },
-    {
-      label: "Relatórios",
-      icon: "pi pi-chart-bar",
-      command: () => navigate("/relatorios"),
-    },
-    {
-      label: "Sair",
-      icon: "pi pi-sign-out",
-      command: handleLogout,
-    },
-  ];
 
   // Dados de exemplo para o estoque
   const produtos = [
@@ -157,30 +108,15 @@ const Estoque = () => {
 
   return (
     <div className="app-container">
-      <div className="sidebar">
-        <div className="sidebar-header">
-          <h2>Oficina Tralalero Tralala</h2>
-        </div>
-        <Menu model={menuItems} className="sidebar-menu" />
-      </div>
+      <Sidebar />
 
       <div className="main-content">
-        <div className="content-header">
-          <h1 className="content-title">Controle de Estoque</h1>
-          <div>
-            <Button
-              label="Adicionar Produto"
-              icon="pi pi-plus"
-              className="p-button-success mr-2"
-            />
-            <Button
-              icon="pi pi-sign-out"
-              label="Logout"
-              onClick={handleLogout}
-              className="p-button-danger"
-            />
-          </div>
-        </div>
+        <Header 
+          title="Controle de Estoque"
+          showNewButton={true}
+          newButtonLabel="Adicionar Produto"
+          onNewButtonClick={handleAddProduct}
+        />
 
         <div className="grid">
           <div className="col-12 md:col-6 lg:col-3">

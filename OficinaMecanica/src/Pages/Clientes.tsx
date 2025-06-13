@@ -1,80 +1,18 @@
-import { useContext } from "react";
-import { useNavigate } from "react-router-dom";
 import { Card } from "primereact/card";
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
-import { Menu } from "primereact/menu";
-import type { MenuItem } from "primereact/menuitem";
 import { Badge } from "primereact/badge";
 import { Button } from "primereact/button";
-import { AuthContext } from "../contexts/AuthContext";
 import type { Cliente } from "../types/types";
 import Header from "../components/Header";
+import Sidebar from "../components/Sidebar";
 
 const Clientes = () => {
-  const { logout } = useContext(AuthContext);
-  const navigate = useNavigate();
-
-  const handleLogout = () => {
-    logout();
-    navigate("/login");
-  };
 
   const handleNewClient = () => {
     // Implementação futura para criar novo cliente
     console.log("Criar novo cliente");
   };
-
-  const menuItems: MenuItem[] = [
-    {
-      label: "Dashboard",
-      icon: "pi pi-home",
-      command: () => navigate("/dashboard"),
-    },
-    {
-      label: "Estoque",
-      icon: "pi pi-box",
-      command: () => navigate("/estoque"),
-    },
-    {
-      label: "Funcionários",
-      icon: "pi pi-users",
-      command: () => navigate("/funcionarios"),
-    },
-    {
-      label: "Clientes",
-      icon: "pi pi-user",
-      command: () => navigate("/clientes"),
-    },
-    {
-      label: "Veículos",
-      icon: "pi pi-car",
-      command: () => navigate("/veiculos"),
-    },
-    {
-      label: "Serviços",
-      icon: "pi pi-wrench",
-      command: () => navigate("/servicos"),
-    },
-    {
-      label: "Relatórios",
-      icon: "pi pi-chart-bar",
-      command: () => navigate("/relatorios"),
-    },
-    {
-      separator: true,
-    },
-    {
-      label: "Configurações",
-      icon: "pi pi-cog",
-      command: () => navigate("/settings"),
-    },
-    {
-      label: "Sair",
-      icon: "pi pi-sign-out",
-      command: handleLogout,
-    },
-  ];
 
   // Dados de exemplo para clientes
   const clientes: Cliente[] = [
@@ -154,12 +92,7 @@ const Clientes = () => {
 
   return (
     <div className="app-container">
-      <div className="sidebar">
-        <div className="sidebar-header">
-          <h2>Auto Repair Shop</h2>
-        </div>
-        <Menu model={menuItems} className="sidebar-menu" />
-      </div>
+      <Sidebar />
 
       <div className="main-content">
         <Header
