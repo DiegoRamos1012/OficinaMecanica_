@@ -13,9 +13,9 @@ import Sidebar from "../components/Sidebar";
 
 const Settings = () => {
   // Estado para as configurações
-  const [nome, setNome] = useState("Admin Usuário");
+  const [nome, setNome] = useState("Guinho");
   const [email, setEmail] = useState("admin@autorepair.com");
-  const [telefone, setTelefone] = useState("(11) 98765-4321");
+  const [telefone, setTelefone] = useState("(12) 98765-4321");
   const [senha, setSenha] = useState("");
   const [confirmSenha, setConfirmSenha] = useState("");
 
@@ -61,12 +61,12 @@ const Settings = () => {
                 <Card className="dashboard-card">
                   <div className="flex flex-column align-items-center">
                     <Avatar
-                      image="/src/assets/images/default-avatar.png"
+                      icon="pi pi-user"
                       size="xlarge"
                       shape="circle"
                       className="mb-3"
                     />
-                    <h3 className="mt-2 mb-3">Foto do Perfil</h3>
+                    <h3 className="mt-2 mb-3">Foto de Perfil</h3>
                     <FileUpload
                       mode="basic"
                       name="avatar"

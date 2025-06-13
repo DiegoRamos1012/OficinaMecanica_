@@ -510,53 +510,30 @@ button:focus-visible {
   border-left: 3px solid transparent; /* Borda para indicar seleção */
 }
 
-.sidebar-menu .p-menuitem-link:hover {
-  background: rgba(255, 255, 255, 0.15) !important; /* Hover mais visível */
-  color: white !important;
-  border-left: 3px solid #2dce89; /* Cor verde brilhante na borda ao passar o mouse */
+/* Texto dos itens de menu - simplificado */
+.sidebar-menu .p-menuitem-text {
+  color: #ffffff !important; /* Branco puro */
 }
 
-.sidebar-menu .p-menuitem-link .p-menuitem-icon {
-  color: rgba(255, 255, 255, 0.8); /* Ícones mais brilhantes */
-  margin-right: 0.75rem;
-  font-size: 1rem; /* Tamanho consistente para ícones */
-  transition: all 0.2s ease;
+/* Nova regra para títulos de seções do menu */
+.sidebar-menu .p-submenu-header,
+.sidebar-menu .p-menuitem-header,
+.sidebar-menu .p-menu-separator {
+  color: #ffffff !important; /* Branco puro */
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 0.8rem;
+  letter-spacing: 0.5px;
+  padding: 0.75rem 1rem 0.5rem;
+  background: transparent !important;
+  border: none;
 }
 
-.sidebar-menu .p-menuitem-link:hover .p-menuitem-icon {
-  color: #2dce89; /* Cor verde brilhante para ícones ao passar o mouse */
-  transform: translateX(3px); /* Pequena animação ao passar o mouse */
-}
-
-.sidebar-menu .p-menuitem-active > .p-menuitem-link {
-  background: rgba(
-    45,
-    206,
-    137,
-    0.2
-  ) !important; /* Fundo verde transparente para item ativo */
-  color: white !important;
-  border-left: 3px solid #2dce89; /* Verde brilhante na borda do item ativo */
-}
-
-.sidebar-menu .p-menuitem-active > .p-menuitem-link .p-menuitem-icon {
-  color: #2dce89 !important; /* Verde brilhante para ícone do item ativo */
-}
-
-/* Item de menu "Sair" estilizado especialmente */
-.sidebar-menu .p-menuitem:last-child .p-menuitem-link {
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
-  margin-top: 4px;
-  color: #ff8d72 !important; /* Cor laranja/vermelha para "Sair" */
-}
-
-.sidebar-menu .p-menuitem:last-child .p-menuitem-link:hover {
-  background-color: rgba(255, 141, 114, 0.15) !important;
-  border-left: 3px solid #ff8d72; /* Cor laranja/vermelha na borda */
-}
-
-.sidebar-menu .p-menuitem:last-child .p-menuitem-link .p-menuitem-icon {
-  color: #ff8d72; /* Cor laranja/vermelha para o ícone "Sair" */
+/* Estilo específico para o separador do menu */
+.sidebar-menu .p-menu-separator {
+  border-top: 1px solid rgba(255, 255, 255, 0.2) !important;
+  margin: 0.5rem 1rem !important;
+  padding: 0 !important;
 }
 
 /* Barra de rolagem personalizada para o sidebar */
