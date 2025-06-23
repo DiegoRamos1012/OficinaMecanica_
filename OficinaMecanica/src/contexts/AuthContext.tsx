@@ -1,96 +1,150 @@
-import { createContext, useState, type ReactNode, useEffect } from "react";
+import {
+  createContext,
+  useState,
+  useCallback,
+  type ReactNode,
+  useEffect,
+} from "react";
 import type { User, AuthContextType } from "../types/types";
+import api from "../services/api";
 
 // Create the context with a default value but don't export as a named export
 const AuthContext = createContext<AuthContextType>({
   user: null,
   isAuthenticated: false,
   loading: true,
-  login: () => false,
-  register: () => false,
+  login: async () => false,
+  register: async () => false,
   logout: () => {},
+  checkTokenValidity: async () => false,
 });
 
 // Export the context only for the useAuth hook
 export { AuthContext };
+
+// Interface para resposta da API de autenticação
+interface AuthResponse {
+  token: string;
+  user: User;
+}
 
 // Only export the provider component from this file
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    // Check for saved auth on initial load
-    const storedUser = localStorage.getItem("@AutoRepair:user");
-
-    if (storedUser) {
-      setUser(JSON.parse(storedUser));
-    }
-
-    setLoading(false);
+  // Usando useCallback para memoizar a função logout
+  const logout = useCallback(() => {
+    // Remove os dados do localStorage e limpa o estado
+    localStorage.removeItem("@OficinaMecanica:token");
+    localStorage.removeItem("@OficinaMecanica:user");
+    setUser(null);
   }, []);
 
-  function login(email: string, password: string): boolean {
-    // This is a mock implementation - you'd typically call an API here
-    if (email === "example@999.com" && password === "admin123") {
-      const user = {
-        id: "1",
-        username: "admin",
-        name: "Administrador",
-        email: "example@999.com",
-        roles: ["admin"],
-      };
+  // Transformando checkTokenValidity em callback
+  const checkTokenValidity = useCallback(async (): Promise<boolean> => {
+    try {
+      const token = localStorage.getItem("@OficinaMecanica:token");
 
-      setUser(user);
-      localStorage.setItem("@AutoRepair:user", JSON.stringify(user));
+      if (!token) {
+        logout();
+        return false;
+      }
+
+      // Faz uma requisição para verificar a validade do token
+      await api.get("/validate-token");
       return true;
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    } catch (error) {
+      logout();
+      return false;
     }
+  }, [logout]); // logout como dependência porque é usado dentro da função
 
-    return false;
+  useEffect(() => {
+    const loadUser = async () => {
+      const storedUser = localStorage.getItem("@OficinaMecanica:user");
+      const token = localStorage.getItem("@OficinaMecanica:token");
+
+      if (storedUser && token) {
+        try {
+          // Verifica se o token ainda é válido
+          const isValid = await checkTokenValidity();
+
+          if (isValid) {
+            setUser(JSON.parse(storedUser));
+          }
+        } catch (error) {
+          // Mostra o erro de forma mais detalhada
+          if (error instanceof Error) {
+            console.error(`Erro ao validar token: ${error.message}`);
+          } else {
+            console.error("Erro desconhecido ao validar token");
+          }
+          logout();
+        }
+      }
+
+      setLoading(false);
+    };
+
+    loadUser();
+  }, [checkTokenValidity, logout]); // Agora é seguro incluir estas dependências
+
+  async function login(email: string, password: string): Promise<boolean> {
+    try {
+      setLoading(true);
+
+      // Faz requisição para a API de login
+      const response = await api.post<AuthResponse>("/login", {
+        email,
+        password,
+      });
+      const { user, token } = response.data;
+
+      // Salva os dados no localStorage e no estado
+      localStorage.setItem("@OficinaMecanica:token", token);
+      localStorage.setItem("@OficinaMecanica:user", JSON.stringify(user));
+      setUser(user);
+
+      return true;
+    } catch (_error) {
+      console.error("Erro durante login:", _error);
+      return false;
+    } finally {
+      setLoading(false);
+    }
   }
 
-  function register(
+  async function register(
     username: string,
     email: string,
     password: string
-  ): boolean {
+  ): Promise<boolean> {
     try {
-      // Em uma aplicação real, você enviaria esses dados para uma API
-      // Para esta implementação de mock, vamos simular o registro bem-sucedido
-      // e também fazer o login do usuário após o registro
+      setLoading(true);
 
-      const userId = Date.now().toString(); // Simulando geração de ID único
-
-      const newUser: User = {
-        id: userId,
+      // Faz requisição para a API de registro
+      const response = await api.post<AuthResponse>("/register", {
         username,
-        name: username, // Usando username como name por simplicidade
         email,
-        roles: ["user"], // Usuário padrão começa com role 'user'
-      };
+        password,
+      });
 
-      // Salvar o usuário no localStorage
-      // Em uma aplicação real, este usuário viria da resposta da API
-      setUser(newUser);
-      localStorage.setItem("@AutoRepair:user", JSON.stringify(newUser));
+      const { user, token } = response.data;
 
-      // Em uma aplicação real, você também salvaria o password em um sistema de autenticação
-      // Aqui apenas simulamos o armazenamento para fins de teste
-      localStorage.setItem(
-        `@AutoRepair:userCredentials:${email}`,
-        JSON.stringify({ username, password })
-      );
+      // Salva os dados no localStorage e no estado
+      localStorage.setItem("@OficinaMecanica:token", token);
+      localStorage.setItem("@OficinaMecanica:user", JSON.stringify(user));
+      setUser(user);
 
       return true;
-    } catch (error) {
-      console.error("Erro durante o registro:", error);
+    } catch (_error) {
+      console.error("Erro durante o registro:", _error);
       return false;
+    } finally {
+      setLoading(false);
     }
-  }
-
-  function logout() {
-    setUser(null);
-    localStorage.removeItem("@AutoRepair:user");
   }
 
   return (
@@ -102,6 +156,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         login,
         register,
         logout,
+        checkTokenValidity,
       }}
     >
       {children}
