@@ -13,10 +13,10 @@ const Login = () => {
   const navigate = useNavigate();
   const { login } = useAuth();
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     // Usando a nova tipagem do método login (apenas email e senha)
-    const success = login(email, password);
+    const success = await login(email, password);
 
     if (success) {
       navigate("/dashboard");
@@ -26,10 +26,10 @@ const Login = () => {
   };
 
   // Função para entrar diretamente, com autenticação
-  const handleDirectAccess = () => {
+  const handleDirectAccess = async () => {
     // Autenticar com valores padrão antes de navegar
     // Usando a nova tipagem do método login (apenas email e senha)
-    const success = login("example@999.com", "admin123");
+    const success = await login("example@999.com", "admin123");
 
     if (success) {
       navigate("/dashboard");
