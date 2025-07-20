@@ -7,11 +7,13 @@ import Sidebar from "../components/Sidebar";
 import { useEffect, useState } from "react";
 import api from "../services/api";
 import type { Estoque } from "../types/types";
+import { Dialog } from "primereact/dialog";
 
 const Estoque = () => {
   const [estoque, setEstoque] = useState<Estoque[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [showDialog, setShowDialog] = useState(false);
 
   useEffect(() => {
     const fetchEstoque = async () => {
@@ -73,7 +75,7 @@ const Estoque = () => {
           title="Controle de Estoque"
           showNewButton={true}
           newButtonLabel="Adicionar Produto"
-          onNewButtonClick={handleAddProduct}
+          onNewButtonClick={() => setShowDialog(true)}
         />
 
         <div className="grid">
@@ -168,6 +170,36 @@ const Estoque = () => {
             />
           </DataTable>
         </div>
+
+        {/* Dialog para adicionar produto */}
+        <Dialog
+          header="Adicione um produto ao estoque"
+          visible={showDialog}
+          style={{ width: "400px" }}
+          onHide={() => setShowDialog(false)}
+          modal
+        >
+          <form>
+            <div className="p-field">
+              <label htmlFor="nome">Nome</label>
+              <input id="nome" type="text" className="p-inputtext" />
+            </div>
+            <div className="p-field">
+              <label htmlFor="codigo">Código</label>
+              <input id="codigo" type="text" className="p-inputtext" />
+            </div>
+            {/* Adicione mais campos conforme necessário */}
+            <div className="p-d-flex p-jc-end" style={{ marginTop: 16 }}>
+              <Button
+                label="Cancelar"
+                className="p-button-text"
+                onClick={() => setShowDialog(false)}
+                type="button"
+              />
+              <Button label="Salvar" className="p-ml-2" type="submit" />
+            </div>
+          </form>
+        </Dialog>
       </div>
     </div>
   );

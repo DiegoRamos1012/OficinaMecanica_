@@ -1,16 +1,109 @@
-/* Estilos globais */
+/* =====================================================
+   VARIÁVEIS DE CORES PADRÃO
+   -----------------------------------------------------
+   Defina todas as cores principais do tema aqui. Use as
+   variáveis em todo o CSS para garantir padronização e
+   fácil manutenção entre temas claro e escuro.
+   Exemplo de uso: color: var(--primary);
+   ===================================================== */
 :root {
-  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
-  font-weight: 400;
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  --primary: #2a5298; /* Cor principal (azul) */
+  --primary-dark: #1e3c72; /* Azul escuro */
+  --secondary: #5e81ac; /* Cor secundária */
+  --danger: #e74c3c; /* Erro/alerta */
+  --warning: #f39c12; /* Aviso */
+  --success: #27ae60; /* Sucesso */
+  --info: #3498db; /* Informativo */
+  --background: #ffffff; /* Fundo principal */
+  --background-alt: #f8f9fa; /* Fundo alternativo */
+  --card-bg: #fff; /* Fundo de cards */
+  --card-title: #1a365d; /* Título de cards */
+  --sidebar-bg: linear-gradient(
+    to bottom,
+    #1e3c72,
+    #2a5298
+  ); /* Fundo do menu lateral */
+  --text: #222; /* Cor padrão do texto */
+  --text-light: #f5f5f5; /* Texto claro */
+  --text-muted: #7f8c8d; /* Texto secundário/desabilitado */
+  --border: #dee2e6; /* Cor de borda padrão */
+  --border-dark: #4b5563; /* Borda escura */
+  --shadow: 0 3px 8px rgba(0, 0, 0, 0.1); /* Sombra padrão */
 }
+
+/* =====================================================
+   TEMA ESCURO
+   -----------------------------------------------------
+   Para ativar o tema escuro, adicione a classe .theme-dark
+   ao <body> ou ao elemento #root. Exemplo:
+     <body class="theme-dark"> ...
+   ou
+     <div id="root" class="theme-dark"> ...
+   As variáveis abaixo serão aplicadas corretamente.
+   ===================================================== */
+body.theme-dark,
+#root.theme-dark {
+  --primary: #5e81ac;
+  --primary-dark: #23272f;
+  --secondary: #2a5298;
+  --danger: #e74c3c;
+  --warning: #f39c12;
+  --success: #27ae60;
+  --info: #3498db;
+  --background: #181818;
+  --background-alt: #23272f;
+  --card-bg: #23272f;
+  --card-title: #e0e6ed;
+  --sidebar-bg: linear-gradient(to bottom, #23272f, #181818);
+  --text: #f5f5f5;
+  --text-light: #fff;
+  --text-muted: #b0b8c1;
+  --border: #4b5563;
+  --border-dark: #23272f;
+  --shadow: 0 3px 8px rgba(0, 0, 0, 0.3);
+}
+
+/* =====================================================
+   TEMA CLARO
+   -----------------------------------------------------
+   Para ativar o tema claro, adicione a classe .theme-light
+   ao <body> ou ao elemento #root. Exemplo:
+     <body class="theme-light"> ...
+   ou
+     <div id="root" class="theme-light"> ...
+   As variáveis abaixo serão aplicadas corretamente.
+   ===================================================== */
+body.theme-light,
+#root.theme-light {
+  --primary: #2a5298;
+  --primary-dark: #1e3c72;
+  --secondary: #5e81ac;
+  --danger: #e74c3c;
+  --warning: #f39c12;
+  --success: #27ae60;
+  --info: #3498db;
+  --background: #ffffff;
+  --background-alt: #f8f9fa;
+  --card-bg: #fff;
+  --card-title: #1a365d;
+  --sidebar-bg: linear-gradient(to bottom, #1e3c72, #2a5298);
+  --text: #222;
+  --text-light: #f5f5f5;
+  --text-muted: #7f8c8d;
+  --border: #dee2e6;
+  --border-dark: #4b5563;
+  --shadow: 0 3px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* =====================================================
+   SITE PRINCIPAL (CLARO E ESCURO)
+   -----------------------------------------------------
+   Estilos globais e resets para todo o site.
+   ===================================================== */
+
+/* =====================
+   ESTILOS GLOBAIS
+   ===================== */
 
 /* Estilos do root */
 #root {
@@ -80,7 +173,9 @@ button:focus-visible {
   }
 }
 
-/* Login Page Styles */
+/* =====================
+   PÁGINA DE LOGIN
+   ===================== */
 .login-container {
   display: flex;
   align-items: center;
@@ -235,6 +330,9 @@ button:focus-visible {
   color: #1e2b38;
 }
 
+/* =====================
+   PÁGINA DE REGISTRO
+   ===================== */
 /* Register Page Styles - reutilizando grande parte dos estilos do login */
 .register-container {
   display: flex;
@@ -381,6 +479,34 @@ button:focus-visible {
   font-size: 0.7rem;
 }
 
+/* =====================
+   PÁGINA DE ESTOQUE
+   ===================== */
+/* Adicione aqui estilos específicos para a página de estoque, ex:
+.estoque-baixo { color: #e74c3c; font-weight: bold; }
+.estoque-medio { color: #f39c12; font-weight: bold; }
+.estoque-normal { color: #27ae60; font-weight: bold; }
+*/
+
+/* =====================
+   PÁGINA DE FUNCIONÁRIOS
+   ===================== */
+/* Adicione aqui estilos específicos para a página de funcionários, ex:
+.funcionario-status-ativo { color: #27ae60; }
+.funcionario-status-ferias { color: #f39c12; }
+.funcionario-status-inativo { color: #e74c3c; }
+*/
+
+/* =====================
+   PÁGINA DE CONFIGURAÇÕES
+   ===================== */
+/* Adicione aqui estilos específicos para a página de configurações, ex:
+.settings-card { /* já existe, mas pode customizar mais aqui */
+*/
+
+/* =====================
+   ESTILOS DO DASHBOARD
+   ===================== */
 /* Dashboard Styles */
 .dashboard-container {
   display: flex;
@@ -450,6 +576,9 @@ button:focus-visible {
   margin-top: 0.5rem !important; /* Reduzir margem superior */
 }
 
+/* =====================
+   ESTILOS DO LAYOUT DO APP
+   ===================== */
 /* App Layout Styles - ADJUSTMENT FOR SPACE REDUCTION */
 .app-container {
   display: flex;
@@ -564,6 +693,9 @@ button:focus-visible {
   overflow-x: hidden;
 }
 
+/* =====================
+   ESTILOS PARA TABELAS (DataTable)
+   ===================== */
 /* Ajustes para DataTable */
 .p-datatable .p-datatable-header {
   padding: 0.5rem !important; /* Reduzir padding do header */
@@ -585,6 +717,9 @@ button:focus-visible {
   scale: 0.9; /* Reduzir escala dos botões de ação */
 }
 
+/* =====================
+   AJUSTES RESPONSIVOS
+   ===================== */
 /* Responsive adjustments */
 @media screen and (max-width: 768px) {
   .sidebar {
@@ -635,6 +770,9 @@ button:focus-visible {
   padding: 0.75rem !important; /* Reduzido para criar cards mais próximos */
 }
 
+/* =====================
+   MELHORIAS NO CABEÇALHO DO CONTEÚDO
+   ===================== */
 /* Content Header Improvements */
 .content-header {
   display: flex;
@@ -670,6 +808,9 @@ button:focus-visible {
   border-radius: 3px;
 }
 
+/* =====================
+   ESTILOS PARA TÍTULOS DE SEÇÃO
+   ===================== */
 /* Section Title styles - Enhanced */
 .section-title {
   margin: 2rem 0 1rem; /* Aumentado para dar mais espaço */
@@ -723,9 +864,12 @@ button:focus-visible {
   font-weight: 600;
 }
 
+/* =====================
+   ESTILOS DA PÁGINA DE CONFIGURAÇÕES
+   ===================== */
 /* Settings Page Styles */
 .p-tabview .p-tabview-nav {
-  border-color: #dee2e6;
+  border-color: #4b5563;
 }
 
 .p-tabview .p-tabview-nav li .p-tabview-nav-link {
@@ -802,6 +946,9 @@ button:focus-visible {
   right: 0;
 }
 
+/* =====================
+   ESTILOS DO COMPONENTE HEADER
+   ===================== */
 /* Header Component Styles */
 .header-actions {
   display: flex;
@@ -833,12 +980,356 @@ button:focus-visible {
   height: 2rem !important;
 }
 
-/* Content Header with standardized styling */
-.content-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 1.5rem;
-  padding-bottom: 0.75rem;
-  border-bottom: 2px solid #2a5298;
+/* =====================
+   ESTILOS FINAIS
+   ===================== */
+body,
+.app-container {
+  background: var(--background);
+  color: var(--text);
+}
+
+.dashboard-card {
+  background: var(--card-bg) !important;
+}
+
+.dashboard-card .p-card-title {
+  color: var(--card-title);
+}
+
+.sidebar {
+  background: var(--sidebar-bg);
+}
+
+.sidebar-header h2,
+.sidebar-menu .p-menuitem-text,
+.sidebar-menu .p-submenu-header,
+.sidebar-menu .p-menuitem-header {
+  color: var(--text-light) !important;
+}
+
+.sidebar-menu .p-menuitem-link {
+  color: rgba(255, 255, 255, 0.9) !important;
+}
+
+.sidebar-menu .p-menu-separator {
+  border-top: 1px solid rgba(255, 255, 255, 0.2) !important;
+}
+
+.dashboard-title,
+.content-title,
+.section-title h2 {
+  color: var(--card-title);
+}
+
+.section-title::after {
+  background: linear-gradient(to right, var(--primary), var(--secondary));
+}
+
+.section-title i.section-icon,
+.section-title .section-badge {
+  color: var(--primary);
+}
+
+.section-title .section-badge {
+  background-color: #edf2f7;
+}
+
+.p-tabview .p-tabview-nav {
+  border-color: var(--border-dark);
+}
+
+.p-tabview .p-tabview-nav li .p-tabview-nav-link {
+  border-color: var(--border);
+  color: var(--text);
+}
+
+.p-tabview .p-tabview-nav li .p-tabview-nav-link:hover {
+  background-color: var(--background-alt);
+}
+
+.p-tabview .p-tabview-nav li.p-highlight .p-tabview-nav-link {
+  background-color: var(--card-bg);
+  border-color: var(--primary);
+  color: var(--primary);
+  border-bottom-color: var(--primary);
+}
+
+.p-tabview .p-tabview-panels {
+  padding: 1.25rem 0;
+}
+
+.p-fileupload-buttonbar .p-button {
+  background-color: var(--primary);
+  border-color: var(--primary);
+}
+
+.p-fileupload-buttonbar .p-button:hover {
+  background-color: var(--primary-dark);
+  border-color: var(--primary-dark);
+}
+
+.p-avatar.p-avatar-xlarge {
+  width: 8rem;
+  height: 8rem;
+}
+
+.p-avatar.p-avatar-xlarge img {
+  width: 8rem;
+}
+
+.settings-card {
+  box-shadow: var(--shadow) !important;
+  border-radius: 8px !important;
+}
+
+.settings-form-row label {
+  color: var(--text);
+}
+
+.user-profile {
+  background-color: rgba(42, 82, 152, 0.1);
+}
+
+.user-profile:hover {
+  background-color: rgba(42, 82, 152, 0.2);
+}
+
+.user-name {
+  color: var(--card-title);
+}
+
+/* Danger, warning, success, info, muted */
+.login-error,
+.register-error {
+  color: var(--danger);
+}
+
+.direct-access-button {
+  background-color: var(--warning) !important;
+  border-color: var(--warning) !important;
+}
+.direct-access-button:hover {
+  background-color: #e67e22 !important;
+  border-color: #e67e22 !important;
+}
+
+.estoque-baixo {
+  color: var(--danger);
+  font-weight: bold;
+}
+.estoque-medio {
+  color: var(--warning);
+  font-weight: bold;
+}
+.estoque-normal {
+  color: var(--success);
+  font-weight: bold;
+}
+
+.funcionario-status-ativo {
+  color: var(--success);
+}
+.funcionario-status-ferias {
+  color: var(--warning);
+}
+.funcionario-status-inativo {
+  color: var(--danger);
+}
+
+/* =====================
+   AJUSTES EXTRAS PARA TEMA ESCURO
+   ===================== */
+body.theme-dark,
+#root.theme-dark {
+  background: var(--background) !important;
+  color: var(--text) !important;
+}
+body.theme-dark .dashboard-card,
+#root.theme-dark .dashboard-card,
+body.theme-dark .p-card,
+#root.theme-dark .p-card,
+body.theme-dark .p-tabview .p-tabview-nav li .p-tabview-nav-link,
+#root.theme-dark .p-tabview .p-tabview-nav li .p-tabview-nav-link,
+body.theme-dark .p-tabview .p-tabview-panels,
+#root.theme-dark .p-tabview .p-tabview-panels,
+body.theme-dark .p-fileupload-buttonbar .p-button,
+#root.theme-dark .p-fileupload-buttonbar .p-button,
+body.theme-dark .p-inputtext,
+#root.theme-dark .p-inputtext,
+body.theme-dark .p-password input,
+#root.theme-dark .p-password input,
+body.theme-dark .p-dropdown,
+#root.theme-dark .p-dropdown,
+body.theme-dark .p-datatable .p-datatable-header,
+#root.theme-dark .p-datatable .p-datatable-header,
+body.theme-dark .p-datatable .p-datatable-thead > tr > th,
+#root.theme-dark .p-datatable .p-datatable-thead > tr > th,
+body.theme-dark .p-datatable .p-datatable-tbody > tr > td,
+#root.theme-dark .p-datatable .p-datatable-tbody > tr > td {
+  background: var(--card-bg) !important;
+  color: var(--text) !important;
+  border-color: var(--border) !important;
+}
+body.theme-dark .p-tabview .p-tabview-nav li.p-highlight .p-tabview-nav-link,
+#root.theme-dark .p-tabview .p-tabview-nav li.p-highlight .p-tabview-nav-link {
+  background: var(--background) !important;
+  color: var(--primary) !important;
+  border-color: var(--primary) !important;
+  border-bottom-color: var(--primary) !important;
+}
+body.theme-dark .p-button,
+#root.theme-dark .p-button {
+  background: var(--primary) !important;
+  color: var(--text-light) !important;
+  border-color: var(--primary-dark) !important;
+}
+body.theme-dark .p-button.p-button-success,
+#root.theme-dark .p-button.p-button-success {
+  background: var(--success) !important;
+  border-color: var(--success) !important;
+  color: var(--text-light) !important;
+}
+body.theme-dark .p-button:disabled,
+#root.theme-dark .p-button:disabled {
+  background: var(--border-dark) !important;
+  color: var(--text-muted) !important;
+}
+body.theme-dark .p-inputtext,
+#root.theme-dark .p-inputtext,
+body.theme-dark .p-password input,
+#root.theme-dark .p-password input {
+  background: var(--background-alt) !important;
+  color: var(--text) !important;
+  border-color: var(--border) !important;
+}
+body.theme-dark .p-dropdown,
+#root.theme-dark .p-dropdown {
+  background: var(--background-alt) !important;
+  color: var(--text) !important;
+  border-color: var(--border) !important;
+}
+body.theme-dark .p-dropdown .p-dropdown-label,
+#root.theme-dark .p-dropdown .p-dropdown-label {
+  color: var(--text) !important;
+}
+body.theme-dark .p-card-title,
+#root.theme-dark .p-card-title {
+  color: var(--card-title) !important;
+}
+body.theme-dark .p-tabview .p-tabview-nav li .p-tabview-nav-link,
+#root.theme-dark .p-tabview .p-tabview-nav li .p-tabview-nav-link {
+  color: var(--text) !important;
+}
+body.theme-dark .p-tabview .p-tabview-nav li .p-tabview-nav-link:hover,
+#root.theme-dark .p-tabview .p-tabview-nav li .p-tabview-nav-link:hover {
+  background: var(--background-alt) !important;
+}
+body.theme-dark .p-datatable .p-datatable-header,
+#root.theme-dark .p-datatable .p-datatable-header {
+  background: var(--background-alt) !important;
+  color: var(--text) !important;
+}
+body.theme-dark .p-datatable .p-datatable-thead > tr > th,
+#root.theme-dark .p-datatable .p-datatable-thead > tr > th {
+  background: var(--background-alt) !important;
+  color: var(--text) !important;
+}
+body.theme-dark .p-datatable .p-datatable-tbody > tr > td,
+#root.theme-dark .p-datatable .p-datatable-tbody > tr > td {
+  background: var(--card-bg) !important;
+  color: var(--text) !important;
+}
+body.theme-dark .p-avatar.p-avatar-xlarge,
+#root.theme-dark .p-avatar.p-avatar-xlarge {
+  background: var(--background-alt) !important;
+}
+body.theme-dark .p-avatar.p-avatar-xlarge img,
+#root.theme-dark .p-avatar.p-avatar-xlarge img {
+  background: var(--background-alt) !important;
+}
+body.theme-dark .login-card,
+#root.theme-dark .login-card,
+body.theme-dark .register-card,
+#root.theme-dark .register-card {
+  background: var(--card-bg) !important;
+  color: var(--text) !important;
+}
+body.theme-dark .login-card .p-card-title,
+#root.theme-dark .login-card .p-card-title,
+body.theme-dark .register-card .p-card-title,
+#root.theme-dark .register-card .p-card-title {
+  color: var(--card-title) !important;
+}
+body.theme-dark .login-footer,
+#root.theme-dark .login-footer,
+body.theme-dark .register-footer,
+#root.theme-dark .register-footer {
+  color: var(--text-muted) !important;
+}
+body.theme-dark .register-form .field label,
+#root.theme-dark .register-form .field label,
+body.theme-dark .login-form .field label,
+#root.theme-dark .login-form .field label {
+  color: var(--text) !important;
+}
+body.theme-dark .register-link a,
+#root.theme-dark .register-link a,
+body.theme-dark .login-link a,
+#root.theme-dark .login-link a {
+  color: var(--primary) !important;
+}
+body.theme-dark .register-link a:hover,
+#root.theme-dark .register-link a:hover,
+body.theme-dark .login-link a:hover,
+#root.theme-dark .login-link a:hover {
+  color: var(--primary-dark) !important;
+}
+body.theme-dark .p-paginator,
+#root.theme-dark .p-paginator {
+  background: var(--background-alt) !important;
+  color: var(--text) !important;
+  border-color: var(--border) !important;
+}
+body.theme-dark .p-paginator .p-paginator-pages .p-paginator-page,
+#root.theme-dark .p-paginator .p-paginator-pages .p-paginator-page {
+  background: var(--background-alt) !important;
+  color: var(--text) !important;
+  border: none;
+}
+body.theme-dark .p-paginator .p-paginator-pages .p-paginator-page.p-highlight,
+#root.theme-dark .p-paginator .p-paginator-pages .p-paginator-page.p-highlight {
+  background: var(--primary) !important;
+  color: var(--text-light) !important;
+}
+body.theme-dark .p-paginator .p-paginator-next,
+body.theme-dark .p-paginator .p-paginator-prev,
+#root.theme-dark .p-paginator .p-paginator-next,
+#root.theme-dark .p-paginator .p-paginator-prev {
+  background: var(--background-alt) !important;
+  color: var(--text) !important;
+}
+body.theme-dark .p-paginator .p-paginator-next:disabled,
+body.theme-dark .p-paginator .p-paginator-prev:disabled,
+#root.theme-dark .p-paginator .p-paginator-next:disabled,
+#root.theme-dark .p-paginator .p-paginator-prev:disabled {
+  color: var(--text-muted) !important;
+}
+body.theme-dark .p-tabview .p-tabview-nav,
+#root.theme-dark .p-tabview .p-tabview-nav {
+  background: var(--background-alt) !important;
+  border-color: var(--border-dark) !important;
+}
+body.theme-dark .p-tabview .p-tabview-nav li .p-tabview-nav-link,
+#root.theme-dark .p-tabview .p-tabview-nav li .p-tabview-nav-link {
+  background: var(--background-alt) !important;
+  color: var(--text) !important;
+  border-color: var(--border) !important;
+}
+body.theme-dark .p-tabview .p-tabview-nav li.p-highlight .p-tabview-nav-link,
+#root.theme-dark .p-tabview .p-tabview-nav li.p-highlight .p-tabview-nav-link {
+  background: var(--background) !important;
+  color: var(--primary) !important;
+  border-color: var(--primary) !important;
+  border-bottom-color: var(--primary) !important;
 }

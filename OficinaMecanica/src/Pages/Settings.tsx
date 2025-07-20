@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "primereact/button";
 import { Card } from "primereact/card";
 import { TabView, TabPanel } from "primereact/tabview";
@@ -20,7 +20,10 @@ const Settings = () => {
   const [confirmSenha, setConfirmSenha] = useState("");
 
   // Preferências do sistema
-  const [tema, setTema] = useState("light");
+  const [tema, setTema] = useState(() => {
+    // Inicializa o tema a partir do localStorage ou padrão 'light'
+    return localStorage.getItem("app-theme") || "light";
+  });
   const [notificacoesEmail, setNotificacoesEmail] = useState(true);
   const [notificacoesApp, setNotificacoesApp] = useState(true);
   const [idioma, setIdioma] = useState("pt-BR");
@@ -36,6 +39,29 @@ const Settings = () => {
     { name: "English (US)", value: "en-US" },
     { name: "Español", value: "es" },
   ];
+
+  // Aplica a classe do tema ao body
+  useEffect(() => {
+    const root = document.body;
+    root.classList.remove("theme-light", "theme-dark");
+    if (tema === "dark") {
+      root.classList.add("theme-dark");
+    } else if (tema === "light") {
+      root.classList.add("theme-light");
+    } else if (tema === "system") {
+      // Detecta o tema do sistema
+      const prefersDark = window.matchMedia(
+        "(prefers-color-scheme: dark)"
+      ).matches;
+      root.classList.add(prefersDark ? "theme-dark" : "theme-light");
+    }
+  }, [tema]);
+
+  // Salva a escolha do tema no localStorage
+  const handleTemaChange = (value: string) => {
+    setTema(value);
+    localStorage.setItem("app-theme", value);
+  };
 
   const handleSaveProfile = () => {
     // Implementação futura para salvar o perfil
@@ -191,7 +217,7 @@ const Settings = () => {
                         id="tema"
                         value={tema}
                         options={temas}
-                        onChange={(e) => setTema(e.value)}
+                        onChange={(e) => handleTemaChange(e.value)}
                         optionLabel="name"
                         style={{ width: "14rem" }}
                       />

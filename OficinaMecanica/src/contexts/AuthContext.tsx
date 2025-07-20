@@ -91,14 +91,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     loadUser();
   }, [checkTokenValidity, logout]); // Agora é seguro incluir estas dependências
 
-  async function login(email: string, password: string): Promise<boolean> {
+  async function login(email: string, senha: string): Promise<boolean> {
     try {
       setLoading(true);
 
       // Faz requisição para a API de login
       const response = await api.post<AuthResponse>("/login", {
         email,
-        password,
+        senha,
       });
       const { user, token } = response.data;
 

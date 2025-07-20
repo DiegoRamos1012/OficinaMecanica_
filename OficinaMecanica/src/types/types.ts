@@ -1,11 +1,11 @@
 // User type definition
 export type User = {
   id: string;
-  nome: string; // agora refletindo o backend
+  username: string;
   email: string;
-  cargo: string;
-  imagemPerfil: string;
-  // Remova username, name, roles, profileImage se não usados
+  name: string;
+  roles: string[];
+  profileImage?: string; // Added profile image field
 };
 
 // Auth context interface
@@ -14,13 +14,10 @@ export interface AuthContextType {
   isAuthenticated: boolean;
   loading: boolean;
   login: (email: string, password: string) => Promise<boolean>;
-  register: (
-    username: string,
-    email: string,
-    password: string
-  ) => Promise<boolean>;
+  register: (username: string, email: string, password: string) => Promise<boolean>;
   logout: () => void;
   checkTokenValidity: () => Promise<boolean>;
+
 }
 
 export interface Produto {
@@ -52,24 +49,6 @@ export interface Funcionario {
   dataAdmissao: string;
   status: string;
   telefone: string;
-}
-
-export interface Estoque {
-  id: number;
-  nome: string;
-  codigo: string;
-  descricao: string;
-  categoria: string;
-  quantidade: number;
-  estoque_minimo: number;
-  preco_unitario: number;
-  preco_venda: number;
-  fornecedor: string;
-  status: string;
-  observacoes: string;
-  criado_em: string;      // ou Date, se preferir
-  atualizado_em: string;  // ou Date
-  deleted_at?: string | null; // pode ser null ou string, se usar soft delete
 }
 
 // Interface para definir o tipo de cliente
