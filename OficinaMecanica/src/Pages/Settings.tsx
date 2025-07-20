@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Button } from "primereact/button";
 import { Card } from "primereact/card";
 import { TabView, TabPanel } from "primereact/tabview";
@@ -8,8 +8,10 @@ import { Dropdown } from "primereact/dropdown";
 import { InputSwitch } from "primereact/inputswitch";
 import { Avatar } from "primereact/avatar";
 import { FileUpload } from "primereact/fileupload";
+import { Toast } from "primereact/toast";
 import Header from "../components/Header";
 import Sidebar from "../components/Sidebar";
+import api from "../services/api";
 
 const Settings = () => {
   // Estado para as configurações
@@ -18,6 +20,8 @@ const Settings = () => {
   const [telefone, setTelefone] = useState("");
   const [senha, setSenha] = useState("");
   const [confirmSenha, setConfirmSenha] = useState("");
+  const [userId] = useState<number | null>(1);
+  const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
 
   // Preferências do sistema
   const [tema, setTema] = useState(() => {
@@ -27,6 +31,8 @@ const Settings = () => {
   const [notificacoesEmail, setNotificacoesEmail] = useState(true);
   const [notificacoesApp, setNotificacoesApp] = useState(true);
   const [idioma, setIdioma] = useState("pt-BR");
+
+  const toast = useRef<Toast>(null);
 
   const temas = [
     { name: "Claro", value: "light" },
@@ -64,17 +70,50 @@ const Settings = () => {
   };
 
   const handleSaveProfile = () => {
-    // Implementação futura para salvar o perfil
-    alert("Perfil salvo com sucesso!");
+    if (toast.current) {
+      toast.current.show({
+        severity: "success",
+        summary: "Sucesso",
+        detail: "Perfil salvo com sucesso!",
+        life: 3000,
+      });
+    }
   };
 
   const handleSavePreferences = () => {
-    // Implementação futura para salvar preferências
-    alert("Preferências salvas com sucesso!");
+    if (toast.current) {
+      toast.current.show({
+        severity: "success",
+        summary: "Sucesso",
+        detail: "Preferências salvas com sucesso!",
+        life: 3000,
+      });
+    }
   };
+
+  // Busca as informações do usuário ao carregar a página
+  useEffect(() => {
+    if (!userId) return;
+    const fetchUser = async () => {
+      try {
+        const response = await api.get(`/usuarios/${userId}`);
+        if (response.data && response.data.avatar) {
+          setAvatarUrl(response.data.avatar);
+        }
+        if (response.data && response.data.nome) setNome(response.data.nome);
+        if (response.data && response.data.email) setEmail(response.data.email);
+        if (response.data && response.data.telefone)
+          setTelefone(response.data.telefone);
+      } catch {
+        // Não faz nada, usuário pode não estar logado
+      }
+    };
+    fetchUser();
+  }, [userId]);
 
   return (
     <div className="app-container">
+      <Toast ref={toast} />
       <Sidebar />
 
       <div className="main-content">
@@ -87,7 +126,12 @@ const Settings = () => {
                 <Card className="dashboard-card">
                   <div className="flex flex-column align-items-center">
                     <Avatar
-                      icon="pi pi-user"
+                      image={
+                        avatarUrl
+                          ? `http://localhost:8080/${avatarUrl}`
+                          : undefined
+                      }
+                      icon={!avatarUrl ? "pi pi-user" : undefined}
                       size="xlarge"
                       shape="circle"
                       className="mb-3"
@@ -101,6 +145,48 @@ const Settings = () => {
                       maxFileSize={1000000}
                       chooseLabel="Alterar Foto"
                       className="w-full"
+                      customUpload
+                      uploadHandler={async (e) => {
+                        if (!userId) return;
+                        const file = e.files[0];
+                        const formData = new FormData();
+                        formData.append("avatar", file);
+                        try {
+                          const response = await api.post(
+                            `/usuarios/${userId}/avatar`,
+                            formData
+                          );
+                          if (response.status === 200) {
+                            setAvatarUrl(response.data.avatar);
+                            if (toast.current) {
+                              toast.current.show({
+                                severity: "success",
+                                summary: "Sucesso",
+                                detail: "Avatar atualizado!",
+                                life: 3000,
+                              });
+                            }
+                          } else {
+                            if (toast.current) {
+                              toast.current.show({
+                                severity: "error",
+                                summary: "Erro",
+                                detail: "Falha ao enviar avatar.",
+                                life: 3000,
+                              });
+                            }
+                          }
+                        } catch {
+                          if (toast.current) {
+                            toast.current.show({
+                              severity: "error",
+                              summary: "Erro",
+                              detail: "Falha ao enviar avatar.",
+                              life: 3000,
+                            });
+                          }
+                        }
+                      }}
                     />
                   </div>
                 </Card>
