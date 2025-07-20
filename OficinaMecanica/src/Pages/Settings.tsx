@@ -13,9 +13,9 @@ import Sidebar from "../components/Sidebar";
 
 const Settings = () => {
   // Estado para as configurações
-  const [nome, setNome] = useState("Guinho");
-  const [email, setEmail] = useState("admin@autorepair.com");
-  const [telefone, setTelefone] = useState("(12) 98765-4321");
+  const [nome, setNome] = useState("");
+  const [email, setEmail] = useState("");
+  const [telefone, setTelefone] = useState("");
   const [senha, setSenha] = useState("");
   const [confirmSenha, setConfirmSenha] = useState("");
 

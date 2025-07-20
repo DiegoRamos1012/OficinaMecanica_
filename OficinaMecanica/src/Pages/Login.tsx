@@ -1,10 +1,11 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { Card } from "primereact/card";
 import { InputText } from "primereact/inputtext";
 import { Password } from "primereact/password";
 import { Button } from "primereact/button";
 import { useAuth } from "../hooks/useAuth";
+import { Toast } from "primereact/toast";
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -12,34 +13,56 @@ const Login = () => {
   const [errorMessage, setErrorMessage] = useState("");
   const navigate = useNavigate();
   const { login } = useAuth();
+  const toast = useRef<Toast>(null);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Usando a nova tipagem do método login (apenas email e senha)
     const success = await login(email, password);
 
     if (success) {
-      navigate("/dashboard");
+      toast.current?.show({
+        severity: "success",
+        summary: "Login realizado",
+        detail: "Bem-vindo!",
+        life: 2000,
+      });
+      setTimeout(() => navigate("/dashboard"), 2000);
     } else {
+      toast.current?.show({
+        severity: "error",
+        summary: "Erro no login",
+        detail: "Email ou senha incorretos",
+        life: 3000,
+      });
       setErrorMessage("Email ou senha incorretos");
     }
   };
 
-  // Função para entrar diretamente, com autenticação
   const handleDirectAccess = async () => {
-    // Autenticar com valores padrão antes de navegar
-    // Usando a nova tipagem do método login (apenas email e senha)
     const success = await login("example@999.com", "admin123");
 
     if (success) {
-      navigate("/dashboard");
+      toast.current?.show({
+        severity: "success",
+        summary: "Login realizado",
+        detail: "Bem-vindo!",
+        life: 2000,
+      });
+      setTimeout(() => navigate("/dashboard"), 2000);
     } else {
+      toast.current?.show({
+        severity: "error",
+        summary: "Erro no acesso direto",
+        detail: "Contate o administrador.",
+        life: 3000,
+      });
       setErrorMessage("Erro no acesso direto. Contate o administrador.");
     }
   };
 
   return (
     <div className="login-container">
+      <Toast ref={toast} />
       <Card className="login-card">
         <div className="login-logo"></div>
         <h2 className="p-card-title">Oficina Mecânica Tralalero Tralala</h2>

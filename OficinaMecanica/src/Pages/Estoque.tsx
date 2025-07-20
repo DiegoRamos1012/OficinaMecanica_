@@ -4,71 +4,29 @@ import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 import Header from "../components/Header";
 import Sidebar from "../components/Sidebar";
-
-interface Produto {
-  id: number;
-  codigo: string;
-  nome: string;
-  categoria: string;
-  quantidade: number;
-  precoUnitario: number;
-  fornecedor: string;
-}
+import { useEffect, useState } from "react";
+import api from "../services/api";
+import type { Estoque } from "../types/types";
 
 const Estoque = () => {
-  const handleAddProduct = () => {
-    // Implementação futura para adicionar produto
-    console.log("Adicionar novo produto");
-  };
+  const [estoque, setEstoque] = useState<Estoque[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
-  // Dados de exemplo para o estoque
-  const produtos = [
-    {
-      id: 1,
-      codigo: "P001",
-      nome: "Óleo de Motor 5W30",
-      categoria: "Lubrificantes",
-      quantidade: 45,
-      precoUnitario: 35.9,
-      fornecedor: "Distribuidora ABC",
-    },
-    {
-      id: 2,
-      codigo: "P002",
-      nome: "Filtro de Óleo",
-      categoria: "Filtros",
-      quantidade: 32,
-      precoUnitario: 18.5,
-      fornecedor: "Auto Peças XYZ",
-    },
-    {
-      id: 3,
-      codigo: "P003",
-      nome: "Pastilha de Freio",
-      categoria: "Freios",
-      quantidade: 12,
-      precoUnitario: 65.0,
-      fornecedor: "Freios Master",
-    },
-    {
-      id: 4,
-      codigo: "P004",
-      nome: "Bateria 60Ah",
-      categoria: "Elétrica",
-      quantidade: 8,
-      precoUnitario: 350.0,
-      fornecedor: "Baterias Power",
-    },
-    {
-      id: 5,
-      codigo: "P005",
-      nome: "Lâmpada Farol",
-      categoria: "Elétrica",
-      quantidade: 20,
-      precoUnitario: 15.9,
-      fornecedor: "Auto Peças XYZ",
-    },
-  ];
+  useEffect(() => {
+    const fetchEstoque = async () => {
+      try {
+        setLoading(true);
+        const response = await api.get<Estoque[]>("/estoque");
+        setEstoque(response.data);
+      } catch {
+        setError("Erro ao buscar produto");
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchEstoque();
+  }, []);
 
   const formatCurrency = (value: number) => {
     return new Intl.NumberFormat("pt-BR", {
@@ -77,11 +35,11 @@ const Estoque = () => {
     }).format(value);
   };
 
-  const priceBodyTemplate = (rowData: Produto) => {
-    return formatCurrency(rowData.precoUnitario);
+  const priceBodyTemplate = (rowData: Estoque) => {
+    return formatCurrency(rowData.preco_unitario);
   };
 
-  const estoqueAlertaTemplate = (rowData: Produto) => {
+  const estoqueAlertaTemplate = (rowData: Estoque) => {
     if (rowData.quantidade <= 10) {
       return <span className="estoque-baixo">Baixo</span>;
     } else if (rowData.quantidade <= 20) {
@@ -111,7 +69,7 @@ const Estoque = () => {
       <Sidebar />
 
       <div className="main-content">
-        <Header 
+        <Header
           title="Controle de Estoque"
           showNewButton={true}
           newButtonLabel="Adicionar Produto"
@@ -151,62 +109,63 @@ const Estoque = () => {
 
         <div className="card">
           <DataTable
-            value={produtos}
+            value={estoque}
+            loading={loading}
             paginator
             rows={5}
             rowsPerPageOptions={[5, 10, 25, 50]}
             responsiveLayout="stack"
             breakpoint="960px"
-            emptyMessage="Nenhum produto encontrado"
+            emptyMessage={error || "Nenhum produto encontrado"}
           >
             <Column
               field="codigo"
               header="Código"
               sortable
               style={{ minWidth: "100px" }}
-            ></Column>
+            />
             <Column
               field="nome"
               header="Produto"
               sortable
               style={{ minWidth: "200px" }}
-            ></Column>
+            />
             <Column
               field="categoria"
               header="Categoria"
               sortable
               style={{ minWidth: "150px" }}
-            ></Column>
+            />
             <Column
               field="quantidade"
               header="Quantidade"
               sortable
               style={{ minWidth: "120px" }}
-            ></Column>
+            />
             <Column
-              field="precoUnitario"
+              field="preco_unitario"
               header="Preço"
               body={priceBodyTemplate}
               sortable
               style={{ minWidth: "120px" }}
-            ></Column>
+            />
             <Column
               field="fornecedor"
               header="Fornecedor"
               sortable
               style={{ minWidth: "150px" }}
-            ></Column>
+            />
             <Column
               field="quantidade"
               header="Status"
               body={estoqueAlertaTemplate}
               style={{ minWidth: "120px" }}
-            ></Column>
+            />
             <Column
               body={actionBodyTemplate}
               header="Ações"
               style={{ minWidth: "100px" }}
-            ></Column>
+            />
           </DataTable>
         </div>
       </div>

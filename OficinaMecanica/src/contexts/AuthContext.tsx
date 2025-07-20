@@ -54,7 +54,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       // Faz uma requisição para verificar a validade do token
       await api.get("/validate-token");
       return true;
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (error) {
       logout();
       return false;
@@ -124,16 +124,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     try {
       setLoading(true);
 
-      // Faz requisição para a API de registro
+      // Corrija aqui:
       const response = await api.post<AuthResponse>("/register", {
-        username,
-        email,
-        password,
+        nome: username,
+        email: email,
+        senha: password,
       });
 
       const { user, token } = response.data;
 
-      // Salva os dados no localStorage e no estado
       localStorage.setItem("@OficinaMecanica:token", token);
       localStorage.setItem("@OficinaMecanica:user", JSON.stringify(user));
       setUser(user);

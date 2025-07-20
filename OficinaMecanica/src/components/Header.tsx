@@ -35,11 +35,11 @@ const Header = ({
 
         <div className="user-profile" onClick={() => navigate("/settings")}>
           <span className="user-name mr-2">
-            {user?.name || "Admin Usuário"}
+            {user?.nome || "Admin Usuário"}
           </span>
           <Avatar
             image={
-              user?.profileImage || "/src/assets/images/default-avatar.png"
+              user?.imagemPerfil || "/src/assets/images/default-avatar.png"
             }
             shape="circle"
             className="header-avatar"

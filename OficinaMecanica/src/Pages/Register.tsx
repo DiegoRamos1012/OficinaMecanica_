@@ -1,9 +1,10 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { Card } from "primereact/card";
 import { InputText } from "primereact/inputtext";
 import { Password } from "primereact/password";
 import { Button } from "primereact/button";
+import { Toast } from "primereact/toast";
 import { useAuth } from "../hooks/useAuth";
 
 const Register = () => {
@@ -13,37 +14,57 @@ const Register = () => {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
   const navigate = useNavigate();
-  // Aqui precisamos assumir que existe um método register no AuthContext
-  // Esta função deve ser implementada no contexto de autenticação
   const { register } = useAuth();
+  const toast = useRef<Toast>(null);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    // Validação de senha
     if (password !== confirmPassword) {
       setErrorMessage("As senhas não coincidem");
+      toast.current?.show({
+        severity: "error",
+        summary: "Erro no cadastro",
+        detail: "As senhas não coincidem",
+        life: 3000,
+      });
       return;
     }
 
-    // Simular registro (isto deve ser modificado para chamar uma API real)
     try {
-      // Aqui deveria ser chamada uma API para registro
-      // Por enquanto, vamos apenas fazer login após o registro
-      const success = register(username, email, password);
+      const success = await register(username, email, password);
 
       if (success) {
-        navigate("/dashboard");
+        toast.current?.show({
+          severity: "success",
+          summary: "Cadastro realizado",
+          detail: "Conta criada com sucesso!",
+          life: 2000,
+        });
+        setTimeout(() => navigate("/dashboard"), 2000);
       } else {
         setErrorMessage("Erro ao registrar. Tente novamente.");
+        toast.current?.show({
+          severity: "error",
+          summary: "Erro no cadastro",
+          detail: "Erro ao registrar. Tente novamente.",
+          life: 3000,
+        });
       }
     } catch {
       setErrorMessage("Erro ao registrar. Tente novamente.");
+      toast.current?.show({
+        severity: "error",
+        summary: "Erro no cadastro",
+        detail: "Erro ao registrar. Tente novamente.",
+        life: 3000,
+      });
     }
   };
 
   return (
     <div className="register-container">
+      <Toast ref={toast} />
       <Card className="register-card">
         <div className="register-logo"></div>
         <h2 className="p-card-title">Criar Conta</h2>
@@ -57,7 +78,6 @@ const Register = () => {
               required
             />
           </div>
-
           <div className="field">
             <label htmlFor="email">Email</label>
             <InputText
@@ -68,7 +88,6 @@ const Register = () => {
               required
             />
           </div>
-
           <div className="field">
             <label htmlFor="password">Senha</label>
             <Password
@@ -84,7 +103,6 @@ const Register = () => {
               required
             />
           </div>
-
           <div className="field">
             <label htmlFor="confirmPassword">Confirmar Senha</label>
             <Password
@@ -96,16 +114,12 @@ const Register = () => {
               required
             />
           </div>
-
           {errorMessage && <div className="register-error">{errorMessage}</div>}
-
           <Button type="submit" label="Cadastrar-se" />
-
           <div className="login-link">
             Já tem uma conta? <Link to="/login">Faça login</Link>
           </div>
         </form>
-
         <div className="register-footer">
           © {new Date().getFullYear()} Diego Ramos dos Santos
         </div>
