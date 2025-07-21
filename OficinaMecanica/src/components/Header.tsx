@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { Button } from "primereact/button";
 import { Avatar } from "primereact/avatar";
 import { AuthContext } from "../contexts/AuthContext";
+import api from "../services/api";
 
 interface HeaderProps {
   title: string;
@@ -19,6 +20,35 @@ const Header = ({
 }: HeaderProps) => {
   const { user } = useContext(AuthContext);
   const navigate = useNavigate();
+
+  const renderAvatar = () => {
+    const baseURL = api.defaults.baseURL?.replace(/\/api$/, "") || "";
+    if (user?.avatar && user.avatar !== "[]") {
+      return (
+        <Avatar
+          image={`${baseURL}/${user.avatar.replace(/^\/?/, "")}`}
+          shape="circle"
+          style={{ width: "40px", height: "40px" }}
+          className="header-avatar"
+        />
+      );
+    } else {
+      return (
+        <Avatar
+          icon="pi pi-user"
+          size="large"
+          style={{
+            backgroundColor: "var(--surface-border)",
+            color: "#ffffff",
+            width: "40px",
+            height: "40px",
+          }}
+          shape="circle"
+          className="header-avatar"
+        />
+      );
+    }
+  };
 
   return (
     <div className="content-header">
@@ -37,13 +67,7 @@ const Header = ({
           <span className="user-name mr-2">
             {user?.nome || "Admin Usuário"}
           </span>
-          <Avatar
-            image={
-              user?.imagemPerfil || "/src/assets/images/default-avatar.png"
-            }
-            shape="circle"
-            className="header-avatar"
-          />
+          {renderAvatar()}
         </div>
       </div>
     </div>

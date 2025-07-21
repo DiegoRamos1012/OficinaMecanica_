@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useContext } from "react";
 import { Button } from "primereact/button";
 import { Card } from "primereact/card";
 import { TabView, TabPanel } from "primereact/tabview";
@@ -9,30 +9,36 @@ import { InputSwitch } from "primereact/inputswitch";
 import { Avatar } from "primereact/avatar";
 import { FileUpload } from "primereact/fileupload";
 import { Toast } from "primereact/toast";
+import { Dialog } from "primereact/dialog";
 import Header from "../components/Header";
 import Sidebar from "../components/Sidebar";
 import api from "../services/api";
+import { AuthContext } from "../contexts/AuthContext";
 
 const Settings = () => {
-  // Estado para as configurações
+  // Estado para as configurações do perfil
   const [nome, setNome] = useState("");
   const [email, setEmail] = useState("");
-  const [telefone, setTelefone] = useState("");
   const [senha, setSenha] = useState("");
   const [confirmSenha, setConfirmSenha] = useState("");
-  const [userId] = useState<number | null>(1);
-  const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
+  const { user, setUser } = useContext(AuthContext);
+  const userId = user?.id ?? null;
+  const [, setAvatarUrl] = useState<string | null>(null);
+  const [pendingAvatar, setPendingAvatar] = useState<File | null>(null);
 
   // Preferências do sistema
-  const [tema, setTema] = useState(() => {
-    // Inicializa o tema a partir do localStorage ou padrão 'light'
-    return localStorage.getItem("app-theme") || "light";
-  });
+  const [tema, setTema] = useState(
+    () => localStorage.getItem("app-theme") || "light"
+  );
   const [notificacoesEmail, setNotificacoesEmail] = useState(true);
   const [notificacoesApp, setNotificacoesApp] = useState(true);
   const [idioma, setIdioma] = useState("pt-BR");
 
   const toast = useRef<Toast>(null);
+  const [showRemoveDialog, setShowRemoveDialog] = useState(false);
+
+  // Base URL para imagens
+  const baseURL = api.defaults.baseURL?.replace(/\/api$/, "") || "";
 
   const temas = [
     { name: "Claro", value: "light" },
@@ -55,7 +61,6 @@ const Settings = () => {
     } else if (tema === "light") {
       root.classList.add("theme-light");
     } else if (tema === "system") {
-      // Detecta o tema do sistema
       const prefersDark = window.matchMedia(
         "(prefers-color-scheme: dark)"
       ).matches;
@@ -69,17 +74,67 @@ const Settings = () => {
     localStorage.setItem("app-theme", value);
   };
 
-  const handleSaveProfile = () => {
-    if (toast.current) {
-      toast.current.show({
-        severity: "success",
-        summary: "Sucesso",
-        detail: "Perfil salvo com sucesso!",
-        life: 3000,
-      });
+  // Salva as alterações do perfil
+  const handleSaveProfile = async () => {
+    if (!userId) return;
+    try {
+      await api.put(`/usuarios/${userId}`, { nome, email });
+      // Atualiza nome e email no contexto e localStorage
+      const updatedUser = {
+        ...user,
+        nome: nome,
+        email: email,
+        id: user?.id ?? "",
+        cargo: user?.cargo ?? "",
+        avatar: user?.avatar ?? "",
+      };
+      localStorage.setItem(
+        "@OficinaMecanica:user",
+        JSON.stringify(updatedUser)
+      );
+      if (setUser) setUser(updatedUser);
+
+      // Só faz upload do avatar se houver alteração
+      if (pendingAvatar) {
+        const formData = new FormData();
+        formData.append("avatar", pendingAvatar);
+        const response = await api.post(`/usuarios/${userId}/avatar`, formData);
+        if (response.status === 200) {
+          setAvatarUrl(response.data.avatar);
+          const updatedUserWithAvatar = {
+            ...updatedUser,
+            avatar: response.data.avatar,
+          };
+          localStorage.setItem(
+            "@OficinaMecanica:user",
+            JSON.stringify(updatedUserWithAvatar)
+          );
+          if (setUser) setUser(updatedUserWithAvatar);
+        }
+        setPendingAvatar(null);
+      }
+
+      if (toast.current) {
+        toast.current.show({
+          severity: "success",
+          summary: "Sucesso",
+          detail: "Perfil salvo com sucesso!",
+          life: 3000,
+        });
+      }
+    } catch {
+      if (toast.current) {
+        toast.current.show({
+          severity: "error",
+          summary: "Erro",
+          detail: "Erro ao salvar perfil.",
+          life: 3000,
+        });
+      }
     }
   };
 
+  // Salva as preferências do usuário
   const handleSavePreferences = () => {
     if (toast.current) {
       toast.current.show({
@@ -97,13 +152,10 @@ const Settings = () => {
     const fetchUser = async () => {
       try {
         const response = await api.get(`/usuarios/${userId}`);
-        if (response.data && response.data.avatar) {
+        if (response.data && response.data.avatar)
           setAvatarUrl(response.data.avatar);
-        }
         if (response.data && response.data.nome) setNome(response.data.nome);
         if (response.data && response.data.email) setEmail(response.data.email);
-        if (response.data && response.data.telefone)
-          setTelefone(response.data.telefone);
       } catch {
         // Não faz nada, usuário pode não estar logado
       }
@@ -124,66 +176,174 @@ const Settings = () => {
             <div className="grid">
               <div className="col-12 md:col-6 lg:col-4">
                 <Card className="dashboard-card">
-                  <div className="flex flex-column align-items-center">
-                    <Avatar
-                      image={
-                        avatarUrl
-                          ? `http://localhost:8080/${avatarUrl}`
-                          : undefined
-                      }
-                      icon={!avatarUrl ? "pi pi-user" : undefined}
-                      size="xlarge"
-                      shape="circle"
-                      className="mb-3"
-                    />
+                  <div
+                    className="flex flex-column align-items-center"
+                    style={{ position: "relative" }}
+                  >
+                    {/* Avatar igual ao Header */}
+                    {user?.avatar && user.avatar !== "[]" ? (
+                      <>
+                        <div
+                          style={{
+                            position: "relative",
+                            display: "inline-block",
+                          }}
+                        >
+                          <Avatar
+                            image={`${baseURL}/${user.avatar.replace(
+                              /^\/?/,
+                              ""
+                            )}`}
+                            shape="circle"
+                            style={{ width: "100px", height: "100px" }}
+                            className="mb-3"
+                          />
+                          <Button
+                            icon="pi pi-times"
+                            className="p-button-rounded p-button-danger p-button-sm avatar-remove-btn"
+                            style={{
+                              position: "absolute",
+                              top: 0,
+                              right: 0,
+                              zIndex: 2,
+                              width: 32,
+                              height: 32,
+                              padding: 0,
+                              display: "flex",
+                              alignItems: "center",
+                              justifyContent: "center",
+                            }}
+                            onClick={() => setShowRemoveDialog(true)}
+                          />
+                        </div>
+                        <Dialog
+                          header="Remover Foto de Perfil"
+                          visible={showRemoveDialog}
+                          style={{ width: "350px" }}
+                          onHide={() => setShowRemoveDialog(false)}
+                          footer={
+                            <div>
+                              <Button
+                                label="Cancelar"
+                                icon="pi pi-times"
+                                className="p-button-text"
+                                onClick={() => setShowRemoveDialog(false)}
+                              />
+                              <Button
+                                label="Remover"
+                                icon="pi pi-trash"
+                                className="p-button-danger"
+                                onClick={async () => {
+                                  if (!userId) return;
+                                  try {
+                                    await api.delete(
+                                      `/usuarios/${userId}/avatar`
+                                    );
+                                    const updatedUser = {
+                                      ...user,
+                                      avatar: "",
+                                    };
+                                    localStorage.setItem(
+                                      "@OficinaMecanica:user",
+                                      JSON.stringify(updatedUser)
+                                    );
+                                    if (setUser) setUser(updatedUser);
+                                    if (toast.current) {
+                                      toast.current.show({
+                                        severity: "success",
+                                        summary: "Sucesso",
+                                        detail: "Avatar removido!",
+                                        life: 2000,
+                                      });
+                                    }
+                                  } catch {
+                                    if (toast.current) {
+                                      toast.current.show({
+                                        severity: "error",
+                                        summary: "Erro",
+                                        detail: "Erro ao remover avatar.",
+                                        life: 3000,
+                                      });
+                                    }
+                                  }
+                                  setShowRemoveDialog(false);
+                                }}
+                              />
+                            </div>
+                          }
+                        >
+                          <span>
+                            Tem certeza que deseja remover sua foto de perfil?
+                          </span>
+                        </Dialog>
+                      </>
+                    ) : (
+                      <Avatar
+                        icon="pi pi-user"
+                        size="xlarge"
+                        style={{
+                          backgroundColor: "var(--surface-border)",
+                          color: "#ffffff",
+                          width: "80px",
+                          height: "80px",
+                        }}
+                        shape="circle"
+                        className="mb-3"
+                      />
+                    )}
                     <h3 className="mt-2 mb-3">Foto de Perfil</h3>
                     <FileUpload
                       mode="basic"
                       name="avatar"
-                      auto
+                      auto={false}
                       accept="image/*"
                       maxFileSize={1000000}
-                      chooseLabel="Alterar Foto"
+                      chooseLabel="Selecionar Foto"
                       className="w-full"
-                      customUpload
-                      uploadHandler={async (e) => {
-                        if (!userId) return;
-                        const file = e.files[0];
-                        const formData = new FormData();
-                        formData.append("avatar", file);
-                        try {
-                          const response = await api.post(
-                            `/usuarios/${userId}/avatar`,
-                            formData
-                          );
-                          if (response.status === 200) {
-                            setAvatarUrl(response.data.avatar);
-                            if (toast.current) {
-                              toast.current.show({
-                                severity: "success",
-                                summary: "Sucesso",
-                                detail: "Avatar atualizado!",
-                                life: 3000,
-                              });
+                      customUpload={false}
+                      onSelect={async (e) => {
+                        if (e.files && e.files[0] && userId) {
+                          const file = e.files[0];
+                          const formData = new FormData();
+                          formData.append("avatar", file);
+                          try {
+                            const response = await api.post(
+                              `/usuarios/${userId}/avatar`,
+                              formData
+                            );
+                            if (response.status === 200) {
+                              setAvatarUrl(response.data.avatar);
+                              const updatedUser = {
+                                ...user,
+                                avatar: response.data.avatar,
+                                id: user?.id ?? "",
+                                nome: user?.nome ?? "",
+                                email: user?.email ?? "",
+                                cargo: user?.cargo ?? "",
+                              };
+                              localStorage.setItem(
+                                "@OficinaMecanica:user",
+                                JSON.stringify(updatedUser)
+                              );
+                              if (setUser) setUser(updatedUser);
+                              if (toast.current) {
+                                toast.current.show({
+                                  severity: "success",
+                                  summary: "Sucesso",
+                                  detail: "Avatar atualizado!",
+                                  life: 2000,
+                                });
+                              }
                             }
-                          } else {
+                          } catch {
                             if (toast.current) {
                               toast.current.show({
                                 severity: "error",
                                 summary: "Erro",
-                                detail: "Falha ao enviar avatar.",
+                                detail: "Erro ao enviar avatar.",
                                 life: 3000,
                               });
                             }
-                          }
-                        } catch {
-                          if (toast.current) {
-                            toast.current.show({
-                              severity: "error",
-                              summary: "Erro",
-                              detail: "Falha ao enviar avatar.",
-                              life: 3000,
-                            });
                           }
                         }
                       }}
@@ -220,20 +380,6 @@ const Settings = () => {
                         id="email"
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
-                      />
-                    </div>
-
-                    <div className="field mb-4">
-                      <label
-                        htmlFor="telefone"
-                        className="font-medium mb-2 inline-block"
-                      >
-                        Telefone
-                      </label>
-                      <InputText
-                        id="telefone"
-                        value={telefone}
-                        onChange={(e) => setTelefone(e.target.value)}
                       />
                     </div>
                   </div>

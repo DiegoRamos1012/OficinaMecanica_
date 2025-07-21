@@ -4,13 +4,14 @@ export type User = {
   nome: string; // agora refletindo o backend
   email: string;
   cargo: string;
-  imagemPerfil: string;
+  avatar: string;
   // Remova username, name, roles, profileImage se não usados
 };
 
 // Auth context interface
 export interface AuthContextType {
   user: User | null;
+  setUser?: (user: User | null) => void; // <-- adicione isso
   isAuthenticated: boolean;
   loading: boolean;
   login: (email: string, password: string) => Promise<boolean>;
@@ -67,8 +68,8 @@ export interface Estoque {
   fornecedor: string;
   status: string;
   observacoes: string;
-  criado_em: string;      // ou Date, se preferir
-  atualizado_em: string;  // ou Date
+  criado_em: string; // ou Date, se preferir
+  atualizado_em: string; // ou Date
   deleted_at?: string | null; // pode ser null ou string, se usar soft delete
 }
 
