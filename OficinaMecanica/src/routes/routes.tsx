@@ -4,7 +4,7 @@ import { useAuth } from "../hooks/useAuth";
 import Login from "../Pages/Login";
 import Register from "../Pages/Register";
 import Dashboard from "../Pages/Dashboard";
-import Estoque from "../Pages/Estoque";
+import Estoque from "../Pages/Estoque/Estoque";
 import Funcionarios from "../Pages/Funcionarios";
 import Clientes from "../Pages/Clientes";
 import Veiculos from "../Pages/Veiculos";

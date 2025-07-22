@@ -2,7 +2,11 @@ import axios from 'axios';
 
 // Crie uma instância do axios com a URL base da API
 const api = axios.create({
-  baseURL: 'http://localhost:8080/api', // Ajuste a porta conforme configurado no seu backend
+  baseURL: "http://localhost:8080/api", // <- importante!
+  headers: {
+    "Content-Type": "application/json",
+  },
+  withCredentials: true, 
 });
 
 // Interceptador para adicionar o token de autenticação em cada requisição

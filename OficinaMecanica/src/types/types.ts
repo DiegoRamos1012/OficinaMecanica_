@@ -29,7 +29,7 @@ export interface Produto {
   codigo: string;
   nome: string;
   categoria: string;
-  quantidade: number;
+  quantidade: number ;
   precoUnitario: number;
   fornecedor: string;
 }

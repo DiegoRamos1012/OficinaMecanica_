@@ -421,7 +421,7 @@ const Settings = () => {
                   </div>
                 </Card>
 
-                <div className="flex justify-content-end mt-3">
+                <div className="flex justify-content-end mt-3 mr-3">
                   <Button
                     label="Salvar Alterações"
                     icon="pi pi-save"
