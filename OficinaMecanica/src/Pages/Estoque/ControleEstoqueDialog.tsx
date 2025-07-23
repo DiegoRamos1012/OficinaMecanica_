@@ -28,16 +28,8 @@ const ControleEstoqueDialog = ({
 
   useEffect(() => {
     if (visible) {
-      api
-        .get("/estoque/controle-estoque")
-        .then((resp) => {
-          setTempLimiteBaixo(resp.data.limite_baixo);
-          setTempLimiteMedio(resp.data.limite_medio);
-        })
-        .catch(() => {
-          setTempLimiteBaixo(limiteBaixo);
-          setTempLimiteMedio(limiteMedio);
-        });
+      setTempLimiteBaixo(limiteBaixo);
+      setTempLimiteMedio(limiteMedio);
     }
   }, [visible, limiteBaixo, limiteMedio]);
 

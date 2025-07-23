@@ -42,20 +42,17 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, []);
 
   // Transformando checkTokenValidity em callback
+  // Use apenas no useEffect inicial do AuthProvider. Não chame em outros componentes.
   const checkTokenValidity = useCallback(async (): Promise<boolean> => {
     try {
       const token = localStorage.getItem("@OficinaMecanica:token");
-
       if (!token) {
         logout();
         return false;
       }
-
-      // Faz uma requisição para verificar a validade do token
       await api.get("/validate-token");
       return true;
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    } catch (error) {
+    } catch {
       logout();
       return false;
     }
@@ -74,13 +71,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           if (isValid) {
             setUser(JSON.parse(storedUser));
           }
-        } catch (error) {
-          // Mostra o erro de forma mais detalhada
-          if (error instanceof Error) {
-            console.error(`Erro ao validar token: ${error.message}`);
-          } else {
-            console.error("Erro desconhecido ao validar token");
-          }
+        } catch {
           logout();
         }
       }
@@ -89,7 +80,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     };
 
     loadUser();
-  }, [checkTokenValidity, logout]); // Agora é seguro incluir estas dependências
+  }, [checkTokenValidity, logout]); 
 
   async function login(email: string, senha: string): Promise<boolean> {
     try {
@@ -150,7 +141,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     <AuthContext.Provider
       value={{
         user,
-        setUser, 
+        setUser,
         isAuthenticated: !!user,
         loading,
         login,

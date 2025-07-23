@@ -145,53 +145,45 @@ const Estoque = () => {
     }
   };
 
+  // Centraliza as chamadas de GET /estoque e GET /estoque/controle-estoque
   useEffect(() => {
-    fetchEstoque();
-  }, []);
-
-  useEffect(() => {
-    // Busca limites do backend ao iniciar
-    api
-      .get("/estoque/controle-estoque")
-      .then((resp) => {
-        setLimiteBaixo(resp.data.limite_baixo);
-        setLimiteMedio(resp.data.limite_medio);
-      })
-      .catch(() => {
-        setLimiteBaixo(10);
-        setLimiteMedio(20);
-      });
-  }, []);
-
-  useEffect(() => {
-    async function fetchDashboardEstoque() {
+    async function fetchAllEstoqueData() {
       try {
-        const resp = await api.get("/estoque");
-        setTotalProdutos(resp.data.length);
+        const [respEstoque, respLimites, respBaixo] = await Promise.all([
+          api.get("/estoque"),
+          api.get("/estoque/controle-estoque"),
+          api.get("/estoque/baixo-estoque"),
+        ]);
+        setEstoque(respEstoque.data);
+        setTotalProdutos(respEstoque.data.length);
         setValorTotalEstoque(
-          resp.data.reduce(
+          respEstoque.data.reduce(
             (acc: number, item: Estoque) =>
               acc + item.quantidade * item.preco_unitario,
             0
           )
         );
         setTotalFornecedores(
-          Array.from(new Set(resp.data.map((item: Estoque) => item.fornecedor)))
-            .length
+          Array.from(
+            new Set(respEstoque.data.map((item: Estoque) => item.fornecedor))
+          ).length
         );
+        setLimiteBaixo(respLimites.data.limite_baixo);
+        setLimiteMedio(respLimites.data.limite_medio);
+        setProdutosBaixoEstoque(respBaixo.data.length);
       } catch {
+        setEstoque([]);
         setTotalProdutos(0);
         setValorTotalEstoque(0);
         setTotalFornecedores(0);
-      }
-      try {
-        const respBaixo = await api.get("/estoque/baixo-estoque");
-        setProdutosBaixoEstoque(respBaixo.data.length);
-      } catch {
+        setLimiteBaixo(10);
+        setLimiteMedio(20);
         setProdutosBaixoEstoque(0);
       }
+      setLoading(false);
     }
-    fetchDashboardEstoque();
+    setLoading(true);
+    fetchAllEstoqueData();
   }, []);
 
   const priceBodyTemplate = (rowData: Estoque) => {
