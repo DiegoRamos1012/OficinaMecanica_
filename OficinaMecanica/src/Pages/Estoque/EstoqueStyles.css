@@ -135,4 +135,29 @@ body.theme-dark .p-toast-message .p-toast-icon-close,
 #root.theme-dark .p-toast-message .p-toast-icon-close {
   color: var(--text-light) !important;
 }
+
+/* Dialog de exclusão customizado usando variáveis do tema */
+.dialog-excluir .p-dialog-content {
+  background: var(--background-alt) !important;
+  color: var(--text) !important;
+}
+.dialog-excluir .p-dialog-header {
+  background: var(--primary) !important;
+  color: var(--text-light) !important;
+}
+.dialog-excluir .p-dialog-title {
+  color: var(--text-light) !important;
+}
+.dialog-excluir .p-dialog-header .p-dialog-header-icon {
+  color: var(--text-light) !important;
+}
+.dialog-excluir .p-button-danger {
+  background: var(--danger) !important;
+  color: var(--text-light) !important;
+  border: none;
+}
+.dialog-excluir .p-button-text {
+  color: var(--text) !important;
+}
+
 /* ...outros estilos do Estoque, se houver... */

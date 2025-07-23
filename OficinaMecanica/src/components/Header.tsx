@@ -10,6 +10,7 @@ interface HeaderProps {
   showNewButton?: boolean;
   newButtonLabel?: string;
   onNewButtonClick?: () => void;
+  children?: React.ReactNode;
 }
 
 const Header = ({
@@ -17,6 +18,7 @@ const Header = ({
   showNewButton = false,
   newButtonLabel = "Novo",
   onNewButtonClick,
+  children,
 }: HeaderProps) => {
   const { user } = useContext(AuthContext);
   const navigate = useNavigate();
@@ -62,7 +64,7 @@ const Header = ({
             onClick={onNewButtonClick}
           />
         )}
-
+        {children}
         <div className="user-profile" onClick={() => navigate("/settings")}>
           <span className="user-name mr-2">
             {user?.nome || "Admin Usuário"}

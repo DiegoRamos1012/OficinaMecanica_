@@ -1,17 +1,28 @@
+// React e hooks
+import { useEffect, useState } from "react";
+
+// PrimeReact componentes
 import { Button } from "primereact/button";
 import { Card } from "primereact/card";
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
-import Header from "../../components/Header";
-import Sidebar from "../../components/Sidebar";
-import { useEffect, useState } from "react";
-import api from "../../services/api";
-import type { Estoque } from "../../types/types";
 import { Dialog } from "primereact/dialog";
-import { formatCurrency } from "../../components/format";
 import { InputText } from "primereact/inputtext";
 import { InputTextarea } from "primereact/inputtextarea";
 import { Dropdown, Dropdown as PrimeDropdown } from "primereact/dropdown";
+import { Toast } from "primereact/toast";
+
+// Utilitários e tipos
+import api from "../../services/api";
+import type { Estoque } from "../../types/types";
+import { formatCurrency } from "../../components/format";
+
+// Componentes internos
+import Header from "../../components/Header";
+import Sidebar from "../../components/Sidebar";
+import ControleEstoqueDialog from "./ControleEstoqueDialog";
+
+// Estilos
 import "./EstoqueStyles.css";
 
 const Estoque = () => {
@@ -39,6 +50,18 @@ const Estoque = () => {
     Estoque,
     "id" | "criado_em" | "atualizado_em" | "deleted_at"
   > | null>(null);
+  const [toastRef, setToastRef] = useState<Toast | null>(null);
+  const [editDialog, setEditDialog] = useState(false);
+  const [produtoEdit, setProdutoEdit] = useState<Estoque | null>(null);
+  const [deleteDialog, setDeleteDialog] = useState(false);
+  const [produtoDelete, setProdutoDelete] = useState<Estoque | null>(null);
+  const [showControleDialog, setShowControleDialog] = useState(false);
+  const [limiteBaixo, setLimiteBaixo] = useState(10);
+  const [limiteMedio, setLimiteMedio] = useState(20);
+  const [totalProdutos, setTotalProdutos] = useState(0);
+  const [produtosBaixoEstoque, setProdutosBaixoEstoque] = useState(0);
+  const [valorTotalEstoque, setValorTotalEstoque] = useState(0);
+  const [totalFornecedores, setTotalFornecedores] = useState(0);
 
   const token = localStorage.getItem("@OficinaMecanica:token");
 
@@ -126,30 +149,138 @@ const Estoque = () => {
     fetchEstoque();
   }, []);
 
+  useEffect(() => {
+    // Busca limites do backend ao iniciar
+    api
+      .get("/estoque/controle-estoque")
+      .then((resp) => {
+        setLimiteBaixo(resp.data.limite_baixo);
+        setLimiteMedio(resp.data.limite_medio);
+      })
+      .catch(() => {
+        setLimiteBaixo(10);
+        setLimiteMedio(20);
+      });
+  }, []);
+
+  useEffect(() => {
+    async function fetchDashboardEstoque() {
+      try {
+        const resp = await api.get("/estoque");
+        setTotalProdutos(resp.data.length);
+        setValorTotalEstoque(
+          resp.data.reduce(
+            (acc: number, item: Estoque) =>
+              acc + item.quantidade * item.preco_unitario,
+            0
+          )
+        );
+        setTotalFornecedores(
+          Array.from(new Set(resp.data.map((item: Estoque) => item.fornecedor)))
+            .length
+        );
+      } catch {
+        setTotalProdutos(0);
+        setValorTotalEstoque(0);
+        setTotalFornecedores(0);
+      }
+      try {
+        const respBaixo = await api.get("/estoque/baixo-estoque");
+        setProdutosBaixoEstoque(respBaixo.data.length);
+      } catch {
+        setProdutosBaixoEstoque(0);
+      }
+    }
+    fetchDashboardEstoque();
+  }, []);
+
   const priceBodyTemplate = (rowData: Estoque) => {
     return formatCurrency(rowData.preco_unitario);
   };
 
   const estoqueAlertaTemplate = (rowData: Estoque) => {
-    if (rowData.quantidade <= 10) {
+    if (rowData.quantidade <= limiteBaixo) {
       return <span className="estoque-baixo">Baixo</span>;
-    } else if (rowData.quantidade <= 20) {
+    } else if (rowData.quantidade <= limiteMedio) {
       return <span className="estoque-medio">Médio</span>;
     } else {
       return <span className="estoque-normal">Normal</span>;
     }
   };
 
-  const actionBodyTemplate = () => {
+  const showToast = (
+    msg: string,
+    severity: "success" | "error" = "success"
+  ) => {
+    if (toastRef) {
+      toastRef.show({
+        severity,
+        summary: severity === "success" ? "Sucesso" : "Erro",
+        detail: msg,
+        life: 3000,
+      });
+    }
+  };
+
+  const handleEditProduto = (produto: Estoque) => {
+    setProdutoEdit(produto);
+    setEditDialog(true);
+  };
+
+  const handleDeleteProduto = (produto: Estoque) => {
+    setProdutoDelete(produto);
+    setDeleteDialog(true);
+  };
+
+  const confirmDeleteProduto = async () => {
+    if (!produtoDelete) return;
+    try {
+      setLoading(true);
+      await api.delete(`/estoque/${produtoDelete.id}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      showToast("Produto excluído com sucesso!");
+      setDeleteDialog(false);
+      setProdutoDelete(null);
+      fetchEstoque();
+    } catch {
+      showToast("Erro ao excluir produto", "error");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleUpdateProduto = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!produtoEdit) return;
+    try {
+      setLoading(true);
+      await api.put(`/estoque/${produtoEdit.id}`, produtoEdit, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      showToast("Produto editado com sucesso!");
+      setEditDialog(false);
+      setProdutoEdit(null);
+      fetchEstoque();
+    } catch {
+      showToast("Erro ao editar produto", "error");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const actionBodyTemplate = (rowData: Estoque) => {
     return (
       <div className="action-buttons">
         <Button
           icon="pi pi-pencil"
           className="p-button-rounded p-button-success p-button-sm mr-2"
+          onClick={() => handleEditProduto(rowData)}
         />
         <Button
           icon="pi pi-trash"
           className="p-button-rounded p-button-danger p-button-sm"
+          onClick={() => handleDeleteProduto(rowData)}
         />
       </div>
     );
@@ -166,6 +297,19 @@ const Estoque = () => {
     const { id, value } = e.target;
     const num = value === "" ? 0 : Math.max(0, Number(value));
     setNewProduto((prev) => ({ ...prev, [id]: num }));
+  };
+
+  const handleInputChangeEdit = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    const { id, value } = e.target;
+    setProdutoEdit((prev) => (prev ? { ...prev, [id]: value } : prev));
+  };
+
+  const handleNumberChangeEdit = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { id, value } = e.target;
+    const num = value === "" ? 0 : Math.max(0, Number(value));
+    setProdutoEdit((prev) => (prev ? { ...prev, [id]: num } : prev));
   };
 
   const handleSaveProduto = async (e: React.FormEvent) => {
@@ -189,11 +333,11 @@ const Estoque = () => {
         status: "",
         observacoes: "",
       });
-      // Atualiza a lista
-      const response = await api.get<Estoque[]>("/estoque");
-      setEstoque(response.data);
+      showToast("Produto adicionado com sucesso!");
+      fetchEstoque();
     } catch {
       setError("Erro ao salvar produto");
+      showToast("Erro ao salvar produto", "error");
     } finally {
       setLoading(false);
     }
@@ -201,41 +345,54 @@ const Estoque = () => {
 
   return (
     <div className="app-container">
+      <Toast ref={setToastRef} />
       <Sidebar />
 
       <div className="main-content">
         <Header
-          title="Controle de Estoque"
+          title="Estoque"
           showNewButton={true}
           newButtonLabel="Adicionar Produto"
           onNewButtonClick={() => {
             setShowDialog(true);
             fetchEstoque();
           }}
-        />
+        >
+          <Button
+            label="Controle de Estoque"
+            className="p-button-info"
+            style={{ marginLeft: 12 }}
+            onClick={() => setShowControleDialog(true)}
+          />
+        </Header>
 
         <div className="grid">
           <div className="col-12 md:col-6 lg:col-3">
             <Card title="Total de Produtos" className="dashboard-card">
-              <div className="text-4xl text-center">127</div>
+              <div className="text-4xl text-center">{totalProdutos}</div>
               <div className="text-center mt-3">Itens em estoque</div>
             </Card>
           </div>
           <div className="col-12 md:col-6 lg:col-3">
             <Card title="Produtos com Baixo Estoque" className="dashboard-card">
-              <div className="text-4xl text-center">8</div>
+              <div className="text-4xl text-center">{produtosBaixoEstoque}</div>
               <div className="text-center mt-3">Necessitam reposição</div>
             </Card>
           </div>
           <div className="col-12 md:col-6 lg:col-3">
             <Card title="Valor total em Estoque" className="dashboard-card">
-              <div className="text-4xl text-center">R$ 24.350</div>
+              <div className="text-4xl text-center">
+                R${" "}
+                {valorTotalEstoque.toLocaleString("pt-BR", {
+                  minimumFractionDigits: 2,
+                })}
+              </div>
               <div className="text-center mt-3">Investimento atual</div>
             </Card>
           </div>
           <div className="col-12 md:col-6 lg:col-3">
             <Card title="Fornecedores" className="dashboard-card">
-              <div className="text-4xl text-center">12</div>
+              <div className="text-4xl text-center">{totalFornecedores}</div>
               <div className="text-center mt-3">Fornecedores ativos</div>
             </Card>
           </div>
@@ -495,6 +652,197 @@ const Estoque = () => {
             </div>
           </form>
         </Dialog>
+
+        {/* Dialog para editar produto */}
+        <Dialog
+          header="Editar produto"
+          visible={editDialog}
+          style={{ width: "500px" }}
+          onHide={() => setEditDialog(false)}
+          modal
+          className="estoque-dialog"
+        >
+          {produtoEdit && (
+            <form onSubmit={handleUpdateProduto} autoComplete="off">
+              <div className="p-field">
+                <label htmlFor="nome">Nome</label>
+                <InputText
+                  id="nome"
+                  value={produtoEdit.nome}
+                  onChange={handleInputChangeEdit}
+                  required
+                  autoComplete="off"
+                />
+              </div>
+              <div className="p-field">
+                <label htmlFor="codigo">Código</label>
+                <InputText
+                  id="codigo"
+                  value={produtoEdit.codigo}
+                  onChange={handleInputChangeEdit}
+                  required
+                  autoComplete="off"
+                />
+              </div>
+              <div className="p-field">
+                <label htmlFor="descricao">Descrição</label>
+                <InputTextarea
+                  id="descricao"
+                  value={produtoEdit.descricao}
+                  onChange={handleInputChangeEdit}
+                  autoResize
+                />
+              </div>
+              <div className="p-field">
+                <label htmlFor="categoria">Categoria</label>
+                <Dropdown
+                  id="categoria"
+                  value={produtoEdit.categoria}
+                  options={categorias}
+                  onChange={(e) =>
+                    setProdutoEdit((prev) =>
+                      prev ? { ...prev, categoria: e.value } : prev
+                    )
+                  }
+                  showClear
+                  filter
+                  style={{ width: "100%" }}
+                  className="dropdown-estoque"
+                />
+              </div>
+              <div className="p-field">
+                <label htmlFor="quantidade">Quantidade</label>
+                <InputText
+                  id="quantidade"
+                  type="number"
+                  value={produtoEdit.quantidade.toString()}
+                  onChange={handleNumberChangeEdit}
+                  min={0}
+                  required
+                  autoComplete="off"
+                />
+              </div>
+              <div className="p-field">
+                <label htmlFor="estoque_minimo">Estoque Mínimo</label>
+                <InputText
+                  id="estoque_minimo"
+                  type="number"
+                  value={produtoEdit.estoque_minimo.toString()}
+                  onChange={handleNumberChangeEdit}
+                  min={0}
+                  autoComplete="off"
+                />
+              </div>
+              <div className="p-field">
+                <label htmlFor="preco_unitario">Preço Unitário</label>
+                <InputText
+                  id="preco_unitario"
+                  type="number"
+                  step="0.01"
+                  value={produtoEdit.preco_unitario.toString()}
+                  onChange={handleNumberChangeEdit}
+                  min={0}
+                  required
+                  autoComplete="off"
+                />
+              </div>
+              <div className="p-field">
+                <label htmlFor="preco_venda">Preço de Venda</label>
+                <InputText
+                  id="preco_venda"
+                  type="number"
+                  step="0.01"
+                  value={produtoEdit.preco_venda.toString()}
+                  onChange={handleNumberChangeEdit}
+                  min={0}
+                  autoComplete="off"
+                />
+              </div>
+              <div className="p-field">
+                <label htmlFor="fornecedor">Fornecedor</label>
+                <InputText
+                  id="fornecedor"
+                  value={produtoEdit.fornecedor}
+                  onChange={handleInputChangeEdit}
+                  autoComplete="off"
+                />
+              </div>
+              <div className="p-field">
+                <label htmlFor="status">Status</label>
+                <InputText
+                  id="status"
+                  value={produtoEdit.status}
+                  onChange={handleInputChangeEdit}
+                  autoComplete="off"
+                />
+              </div>
+              <div className="p-field">
+                <label htmlFor="observacoes">Observações</label>
+                <InputTextarea
+                  id="observacoes"
+                  value={produtoEdit.observacoes}
+                  onChange={handleInputChangeEdit}
+                  autoResize
+                />
+              </div>
+              <div
+                className="p-d-flex"
+                style={{ marginTop: 16, justifyContent: "space-between" }}
+              >
+                <Button
+                  label="Cancelar"
+                  className="p-button-text"
+                  onClick={() => setEditDialog(false)}
+                  type="button"
+                />
+                <Button
+                  label="Salvar"
+                  type="submit"
+                  style={{ marginLeft: 200 }}
+                />
+              </div>
+            </form>
+          )}
+        </Dialog>
+
+        {/* Dialog de confirmação para excluir produto */}
+        <Dialog
+          header="Confirmar exclusão"
+          visible={deleteDialog}
+          style={{ width: "400px" }}
+          onHide={() => setDeleteDialog(false)}
+          modal
+          className="dialog-excluir"
+        >
+          <div style={{ marginBottom: 24, marginTop: 14 }}>
+            Tem certeza que deseja excluir o produto{" "}
+            <b>{produtoDelete?.nome}</b>?
+          </div>
+          <div className="p-d-flex" style={{ justifyContent: "flex-end" }}>
+            <Button
+              label="Cancelar"
+              className="p-button-text"
+              onClick={() => setDeleteDialog(false)}
+            />
+            <Button
+              label="Excluir"
+              className="p-button-danger"
+              onClick={confirmDeleteProduto}
+              style={{ marginLeft: 16 }}
+            />
+          </div>
+        </Dialog>
+
+        {/* Dialog para controle de estoque */}
+        <ControleEstoqueDialog
+          visible={showControleDialog}
+          onHide={() => setShowControleDialog(false)}
+          limiteBaixo={limiteBaixo}
+          limiteMedio={limiteMedio}
+          setLimiteBaixo={setLimiteBaixo}
+          setLimiteMedio={setLimiteMedio}
+          showToast={showToast}
+        />
       </div>
     </div>
   );
