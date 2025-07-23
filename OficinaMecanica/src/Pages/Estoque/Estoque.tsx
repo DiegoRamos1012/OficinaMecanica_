@@ -172,7 +172,7 @@ const Estoque = () => {
     e.preventDefault();
     try {
       setLoading(true);
-      await api.post("/estoque/", newProduto, {
+      await api.post("/estoque", newProduto, {
         headers: { Authorization: `Bearer ${token}` },
       });
       setShowDialog(false);
