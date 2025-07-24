@@ -10,10 +10,10 @@ import { Avatar } from "primereact/avatar";
 import { FileUpload } from "primereact/fileupload";
 import { Toast } from "primereact/toast";
 import { Dialog } from "primereact/dialog";
-import Header from "../components/Header";
-import Sidebar from "../components/Sidebar";
-import api from "../services/api";
-import { AuthContext } from "../contexts/AuthContext";
+import Header from "../../components/Header";
+import Sidebar from "../../components/Sidebar";
+import api from "../../services/api";
+import { AuthContext } from "../../contexts/AuthContext";
 
 const Settings = () => {
   // Estado para as configurações do perfil

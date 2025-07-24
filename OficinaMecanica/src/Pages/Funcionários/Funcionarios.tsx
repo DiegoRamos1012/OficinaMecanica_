@@ -3,12 +3,11 @@ import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 import { Tag } from "primereact/tag";
 import { Button } from "primereact/button";
-import type { Funcionario } from "../types/types";
-import Header from "../components/Header";
-import Sidebar from "../components/Sidebar";
+import type { Funcionario } from "../../types/types";
+import Header from "../../components/Header";
+import Sidebar from "../../components/Sidebar";
 
 const Funcionarios = () => {
-
   const handleNewEmployee = () => {
     // Implementação futura para criar novo funcionário
     console.log("Criar novo funcionário");

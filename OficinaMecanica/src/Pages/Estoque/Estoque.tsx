@@ -15,7 +15,7 @@ import { Toast } from "primereact/toast";
 // Utilitários e tipos
 import api from "../../services/api";
 import type { Estoque } from "../../types/types";
-import { formatCurrency } from "../../components/format";
+import { formatCurrency } from "../../utils/format";
 
 // Componentes internos
 import Header from "../../components/Header";
@@ -86,7 +86,7 @@ const Estoque = () => {
         nome: "Óleo de Motor 10W40 Semissintético",
         codigo: "OLEO-10W40-01",
         descricao:
-          "Lubrificante para motor semissintético 10W40 – indicado para veículos leves a gasolina ou flex.",
+          "Lubrificante para motor semissintético 10W40 / indicado para veículos leves a gasolina ou flex.",
         categoria: "Óleo",
         quantidade: 0,
         estoque_minimo: 5,

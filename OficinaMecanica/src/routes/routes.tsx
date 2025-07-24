@@ -1,14 +1,14 @@
 import React from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
 import { useAuth } from "../hooks/useAuth";
-import Login from "../Pages/Login";
-import Register from "../Pages/Register";
-import Dashboard from "../Pages/Dashboard";
-import Estoque from "../Pages/Estoque/Estoque";
-import Funcionarios from "../Pages/Funcionarios";
-import Clientes from "../Pages/Clientes";
-import Veiculos from "../Pages/Veiculos";
-import Settings from "../Pages/Settings";
+import Login from "../Pages/Autenticação/Login";
+import Register from "../Pages/Autenticação/Register";
+import Dashboard from "../Pages/Dashboard/Dashboard";
+import type Estoque from "../Pages/Estoque/Estoque";
+import Funcionarios from "../Pages/Funcionários/Funcionarios";
+import Clientes from "../Pages/Clientes/Clientes";
+import Veiculos from "../Pages/Veículos/Veiculos";
+import Settings from "../Pages/Configurações/Settings";
 
 // Protected route component that checks authentication
 export const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
