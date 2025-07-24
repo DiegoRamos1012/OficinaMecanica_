@@ -306,6 +306,11 @@ const Estoque = () => {
 
   const handleSaveProduto = async (e: React.FormEvent) => {
     e.preventDefault();
+    // Object Calisthenics: Aplica early return, um recurso que evita que a função se execute se sua condição não for atendida. Melhora a legibilidade e evita processamento desnecessário
+    if (!newProduto.nome) {
+      showToast("Nome obrigatório", "error");
+      return;
+    }
     try {
       setLoading(true);
       await api.post("/estoque", newProduto, {
