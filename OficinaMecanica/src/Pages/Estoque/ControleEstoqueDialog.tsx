@@ -3,6 +3,7 @@ import { InputText } from "primereact/inputtext";
 import { Button } from "primereact/button";
 import { useState, useEffect } from "react";
 import api from "../../services/api";
+import { useToast } from "../../contexts/useToast";
 
 interface ControleEstoqueDialogProps {
   visible: boolean;
@@ -11,7 +12,6 @@ interface ControleEstoqueDialogProps {
   limiteMedio: number;
   setLimiteBaixo: (v: number) => void;
   setLimiteMedio: (v: number) => void;
-  showToast: (msg: string, severity?: "success" | "error") => void;
 }
 
 const ControleEstoqueDialog = ({
@@ -21,10 +21,10 @@ const ControleEstoqueDialog = ({
   limiteMedio,
   setLimiteBaixo,
   setLimiteMedio,
-  showToast,
 }: ControleEstoqueDialogProps) => {
   const [tempLimiteBaixo, setTempLimiteBaixo] = useState(limiteBaixo);
   const [tempLimiteMedio, setTempLimiteMedio] = useState(limiteMedio);
+  const { showToast } = useToast();
 
   useEffect(() => {
     if (visible) {

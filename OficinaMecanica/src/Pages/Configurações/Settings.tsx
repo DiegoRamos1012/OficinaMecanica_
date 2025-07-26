@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, useContext } from "react";
+import { useState, useContext, useEffect } from "react";
 import { Button } from "primereact/button";
 import { Card } from "primereact/card";
 import { TabView, TabPanel } from "primereact/tabview";
@@ -8,12 +8,14 @@ import { Dropdown } from "primereact/dropdown";
 import { InputSwitch } from "primereact/inputswitch";
 import { Avatar } from "primereact/avatar";
 import { FileUpload } from "primereact/fileupload";
-import { Toast } from "primereact/toast";
 import { Dialog } from "primereact/dialog";
 import Header from "../../components/Header";
 import Sidebar from "../../components/Sidebar";
 import api from "../../services/api";
 import { AuthContext } from "../../contexts/AuthContext";
+import { Theme } from "../../contexts/ThemeProvider";
+import { useTheme } from "../../contexts/useTheme";
+import { useToast } from "../../contexts/useToast";
 
 const Settings = () => {
   // Estado para as configurações do perfil
@@ -27,15 +29,14 @@ const Settings = () => {
   const [pendingAvatar, setPendingAvatar] = useState<File | null>(null);
 
   // Preferências do sistema
-  const [tema, setTema] = useState(
-    () => localStorage.getItem("app-theme") || "light"
-  );
+  const { theme, setTheme } = useTheme();
+  const [temaSelecionado, setTemaSelecionado] = useState<Theme>(theme);
   const [notificacoesEmail, setNotificacoesEmail] = useState(true);
   const [notificacoesApp, setNotificacoesApp] = useState(true);
   const [idioma, setIdioma] = useState("pt-BR");
 
-  const toast = useRef<Toast>(null);
   const [showRemoveDialog, setShowRemoveDialog] = useState(false);
+  const { showToast } = useToast();
 
   // Base URL para imagens
   const baseURL = api.defaults.baseURL?.replace(/\/api$/, "") || "";
@@ -52,26 +53,24 @@ const Settings = () => {
     { name: "Español", value: "es" },
   ];
 
-  // Aplica a classe do tema ao body
+  // Aplica o tema visualmente ao selecionar, mas só salva ao clicar em Salvar Preferências
   useEffect(() => {
-    const root = document.body;
-    root.classList.remove("theme-light", "theme-dark");
-    if (tema === "dark") {
-      root.classList.add("theme-dark");
-    } else if (tema === "light") {
-      root.classList.add("theme-light");
-    } else if (tema === "system") {
-      const prefersDark = window.matchMedia(
-        "(prefers-color-scheme: dark)"
-      ).matches;
-      root.classList.add(prefersDark ? "theme-dark" : "theme-light");
-    }
-  }, [tema]);
+    setTheme(temaSelecionado);
+    // eslint-disable-next-line
+  }, [temaSelecionado]);
 
-  // Salva a escolha do tema no localStorage
-  const handleTemaChange = (value: string) => {
-    setTema(value);
-    localStorage.setItem("app-theme", value);
+  // Ao desmontar, se não salvou, restaura o tema global
+  useEffect(() => {
+    return () => {
+      setTheme(theme);
+    };
+    // eslint-disable-next-line
+  }, []);
+
+  // Salva a escolha do tema no contexto apenas ao salvar preferências
+  const handleSavePreferences = () => {
+    localStorage.setItem("app-theme", temaSelecionado);
+    showToast("Preferências salvas com sucesso!", "success");
   };
 
   // Salva as alterações do perfil
@@ -114,35 +113,9 @@ const Settings = () => {
         setPendingAvatar(null);
       }
 
-      if (toast.current) {
-        toast.current.show({
-          severity: "success",
-          summary: "Sucesso",
-          detail: "Perfil salvo com sucesso!",
-          life: 3000,
-        });
-      }
+      showToast("Perfil salvo com sucesso!", "success");
     } catch {
-      if (toast.current) {
-        toast.current.show({
-          severity: "error",
-          summary: "Erro",
-          detail: "Erro ao salvar perfil.",
-          life: 3000,
-        });
-      }
-    }
-  };
-
-  // Salva as preferências do usuário
-  const handleSavePreferences = () => {
-    if (toast.current) {
-      toast.current.show({
-        severity: "success",
-        summary: "Sucesso",
-        detail: "Preferências salvas com sucesso!",
-        life: 3000,
-      });
+      showToast("Erro ao salvar perfil.", "error");
     }
   };
 
@@ -165,7 +138,6 @@ const Settings = () => {
 
   return (
     <div className="app-container">
-      <Toast ref={toast} />
       <Sidebar />
 
       <div className="main-content">
@@ -248,23 +220,12 @@ const Settings = () => {
                                       JSON.stringify(updatedUser)
                                     );
                                     if (setUser) setUser(updatedUser);
-                                    if (toast.current) {
-                                      toast.current.show({
-                                        severity: "success",
-                                        summary: "Sucesso",
-                                        detail: "Avatar removido!",
-                                        life: 2000,
-                                      });
-                                    }
+                                    showToast("Avatar removido!", "success");
                                   } catch {
-                                    if (toast.current) {
-                                      toast.current.show({
-                                        severity: "error",
-                                        summary: "Erro",
-                                        detail: "Erro ao remover avatar.",
-                                        life: 3000,
-                                      });
-                                    }
+                                    showToast(
+                                      "Erro ao remover avatar.",
+                                      "error"
+                                    );
                                   }
                                   setShowRemoveDialog(false);
                                 }}
@@ -326,24 +287,10 @@ const Settings = () => {
                                 JSON.stringify(updatedUser)
                               );
                               if (setUser) setUser(updatedUser);
-                              if (toast.current) {
-                                toast.current.show({
-                                  severity: "success",
-                                  summary: "Sucesso",
-                                  detail: "Avatar atualizado!",
-                                  life: 2000,
-                                });
-                              }
+                              showToast("Avatar atualizado!", "success");
                             }
                           } catch {
-                            if (toast.current) {
-                              toast.current.show({
-                                severity: "error",
-                                summary: "Erro",
-                                detail: "Erro ao enviar avatar.",
-                                life: 3000,
-                              });
-                            }
+                            showToast("Erro ao enviar avatar.", "error");
                           }
                         }
                       }}
@@ -447,9 +394,9 @@ const Settings = () => {
                       </label>
                       <Dropdown
                         id="tema"
-                        value={tema}
+                        value={temaSelecionado}
                         options={temas}
-                        onChange={(e) => handleTemaChange(e.value)}
+                        onChange={(e) => setTemaSelecionado(e.value as Theme)}
                         optionLabel="name"
                         style={{ width: "14rem" }}
                       />

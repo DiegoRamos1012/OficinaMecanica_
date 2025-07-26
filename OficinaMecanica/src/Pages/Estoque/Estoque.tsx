@@ -10,12 +10,12 @@ import { Dialog } from "primereact/dialog";
 import { InputText } from "primereact/inputtext";
 import { InputTextarea } from "primereact/inputtextarea";
 import { Dropdown, Dropdown as PrimeDropdown } from "primereact/dropdown";
-import { Toast } from "primereact/toast";
 
 // Utilitários e tipos
 import api from "../../services/api";
 import type { Estoque } from "../../types/types";
 import { formatCurrency } from "../../utils/format";
+import { useToast } from "../../contexts/useToast";
 
 // Componentes internos
 import Header from "../../components/Header";
@@ -50,7 +50,6 @@ const Estoque = () => {
     Estoque,
     "id" | "criado_em" | "atualizado_em" | "deleted_at"
   > | null>(null);
-  const [toastRef, setToastRef] = useState<Toast | null>(null);
   const [editDialog, setEditDialog] = useState(false);
   const [produtoEdit, setProdutoEdit] = useState<Estoque | null>(null);
   const [deleteDialog, setDeleteDialog] = useState(false);
@@ -63,6 +62,7 @@ const Estoque = () => {
   const [valorTotalEstoque, setValorTotalEstoque] = useState(0);
   const [totalFornecedores, setTotalFornecedores] = useState(0);
 
+  const { showToast } = useToast();
   const token = localStorage.getItem("@OficinaMecanica:token");
 
   const categorias = [
@@ -200,20 +200,6 @@ const Estoque = () => {
     }
   };
 
-  const showToast = (
-    msg: string,
-    severity: "success" | "error" = "success"
-  ) => {
-    if (toastRef) {
-      toastRef.show({
-        severity,
-        summary: severity === "success" ? "Sucesso" : "Erro",
-        detail: msg,
-        life: 3000,
-      });
-    }
-  };
-
   const handleEditProduto = (produto: Estoque) => {
     setProdutoEdit(produto);
     setEditDialog(true);
@@ -342,7 +328,6 @@ const Estoque = () => {
 
   return (
     <div className="app-container">
-      <Toast ref={setToastRef} />
       <Sidebar />
 
       <div className="main-content">
@@ -838,7 +823,6 @@ const Estoque = () => {
           limiteMedio={limiteMedio}
           setLimiteBaixo={setLimiteBaixo}
           setLimiteMedio={setLimiteMedio}
-          showToast={showToast}
         />
       </div>
     </div>
