@@ -1,7 +1,7 @@
 import { BrowserRouter } from "react-router-dom";
 import { AuthProvider } from "./contexts/AuthContext";
 import { ThemeProvider } from "./contexts/ThemeProvider";
-import { ToastProvider } from "./contexts/ToastContext";
+import { ToastProvider } from "./contexts/ToastProvider";
 import AppRoutes from "./routes/routes";
 import "primereact/resources/primereact.min.css";
 import "primeicons/primeicons.css";
