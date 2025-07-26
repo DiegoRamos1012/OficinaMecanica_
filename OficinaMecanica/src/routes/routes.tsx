@@ -4,7 +4,7 @@ import { useAuth } from "../hooks/useAuth";
 import Login from "../Pages/Autenticação/Login";
 import Register from "../Pages/Autenticação/Register";
 import Dashboard from "../Pages/Dashboard/Dashboard";
-import type Estoque from "../Pages/Estoque/Estoque";
+import Estoque from "../Pages/Estoque/Estoque";
 import Funcionarios from "../Pages/Funcionários/Funcionarios";
 import Clientes from "../Pages/Clientes/Clientes";
 import Veiculos from "../Pages/Veículos/Veiculos";
