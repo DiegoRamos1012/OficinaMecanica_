@@ -3,9 +3,9 @@ import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 import { Tag } from "primereact/tag";
 import { Button } from "primereact/button";
-import type { Veiculo } from "../types/types";
-import Header from "../components/Header";
-import Sidebar from "../components/Sidebar";
+import type { Veiculo } from "../../types/types";
+import Header from "../../components/Header";
+import Sidebar from "../../components/Sidebar";
 
 const Veiculos = () => {
 

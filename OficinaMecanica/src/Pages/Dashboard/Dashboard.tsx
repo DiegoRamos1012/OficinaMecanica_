@@ -1,6 +1,6 @@
 import { Card } from "primereact/card";
-import Header from "../components/Header";
-import Sidebar from "../components/Sidebar";
+import Header from "../../components/Header";
+import Sidebar from "../../components/Sidebar";
 
 const Dashboard = () => {
   return (

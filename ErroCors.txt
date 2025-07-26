@@ -1,3 +1,7 @@
 Quando eu estava programando a tela de Estoque, ele dava erro de CORS, mesmo com a configuração dele correta. 
 
 Reverti o problema limpando tudo da tabela e adicionando registros novos, agora o Get funcionou normalmente. Não faço nem ideia do por que.
+
+26/07/2025
+
+Após estudos, descobri que o motivo seja que a validação de token JWT estava sendo feita duas vezes, o que confundia o CORS. Desde então, não obtive mais erros
