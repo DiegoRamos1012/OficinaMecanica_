@@ -1,3 +1,7 @@
+// ThemeProvider.tsx
+// Este arquivo implementa o ThemeProvider, responsável por gerenciar e fornecer o estado do tema (light, dark ou system) para toda a aplicação.
+// Permite alternar e persistir o tema escolhido pelo usuário.
+
 import { useState, useEffect, ReactNode } from "react";
 import { ThemeContext } from "./ThemeContext";
 

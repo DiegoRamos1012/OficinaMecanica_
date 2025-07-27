@@ -40,10 +40,17 @@ export const PublicRoute = ({ children }: { children: React.ReactNode }) => {
   return <>{children}</>;
 };
 
-// Main routes component
-const AppRoutes = () => {
-  const { isAuthenticated } = useAuth();
+// Rotas principais - Adicione rotas novas aqui
+const protectedRoutes = [
+  { path: "/dashboard", element: <Dashboard /> },
+  { path: "/estoque", element: <Estoque /> },
+  { path: "/funcionarios", element: <Funcionarios /> },
+  { path: "/clientes", element: <Clientes /> },
+  { path: "/veiculos", element: <Veiculos /> },
+  { path: "/settings", element: <Settings /> },
+];
 
+const AppRoutes = () => {
   return (
     <Routes>
       <Route
@@ -62,58 +69,14 @@ const AppRoutes = () => {
           </PublicRoute>
         }
       />
-      <Route
-        path="/dashboard"
-        element={
-          <ProtectedRoute>
-            <Dashboard />
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/estoque"
-        element={
-          <ProtectedRoute>
-            <Estoque />
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/funcionarios"
-        element={
-          <ProtectedRoute>
-            <Funcionarios />
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/clientes"
-        element={
-          <ProtectedRoute>
-            <Clientes />
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/veiculos"
-        element={
-          <ProtectedRoute>
-            <Veiculos />
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/settings"
-        element={
-          <ProtectedRoute>
-            <Settings />
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/"
-        element={<Navigate to={isAuthenticated ? "/dashboard" : "/login"} />}
-      />
+      {protectedRoutes.map(({ path, element }) => (
+        <Route
+          key={path}
+          path={path}
+          element={<ProtectedRoute>{element}</ProtectedRoute>}
+        />
+      ))}
+      <Route path="/" element={<Navigate to="/dashboard" />} />
     </Routes>
   );
 };

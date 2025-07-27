@@ -1,3 +1,7 @@
+// ThemeContext.tsx
+// Este arquivo define o contexto de tema da aplicação.
+// Permite acessar e modificar o tema atual (light, dark ou system) em qualquer componente.
+
 import { createContext } from "react";
 import type { Theme } from "./ThemeProvider";
 

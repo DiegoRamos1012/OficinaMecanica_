@@ -1,17 +1,14 @@
-// User type definition
+// Tipos globais da aplicação
 export type User = {
   id: string;
-  nome: string; // agora refletindo o backend
+  nome: string;
   email: string;
   cargo: string;
   avatar: string;
-  // Remova username, name, roles, profileImage se não usados
 };
-
-// Auth context interface
 export interface AuthContextType {
   user: User | null;
-  setUser?: (user: User | null) => void; // <-- adicione isso
+  setUser?: (user: User | null) => void;
   isAuthenticated: boolean;
   loading: boolean;
   login: (email: string, password: string) => Promise<boolean>;
@@ -29,7 +26,7 @@ export interface Produto {
   codigo: string;
   nome: string;
   categoria: string;
-  quantidade: number ;
+  quantidade: number;
   precoUnitario: number;
   fornecedor: string;
 }
@@ -68,12 +65,11 @@ export interface Estoque {
   fornecedor: string;
   status: string;
   observacoes: string;
-  criado_em: string; // ou Date, se preferir
-  atualizado_em: string; // ou Date
-  deleted_at?: string | null; // pode ser null ou string, se usar soft delete
+  criado_em: string;
+  atualizado_em: string;
+  deleted_at?: string | null;
 }
 
-// Interface para definir o tipo de cliente
 export interface Cliente {
   id: number;
   nome: string;

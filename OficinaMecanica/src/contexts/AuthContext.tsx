@@ -1,3 +1,9 @@
+// AuthContext.tsx
+// Este arquivo define o contexto de autenticação da aplicação.
+// Fornece o AuthProvider, responsável por gerenciar o estado de autenticação do usuário,
+// incluindo login, logout, registro, validação de token e persistência dos dados do usuário.
+// O contexto é utilizado por toda a aplicação para acessar e modificar informações de autenticação.
+
 import {
   createContext,
   useState,
@@ -80,7 +86,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     };
 
     loadUser();
-  }, [checkTokenValidity, logout]); 
+  }, [checkTokenValidity, logout]);
 
   async function login(email: string, senha: string): Promise<boolean> {
     try {

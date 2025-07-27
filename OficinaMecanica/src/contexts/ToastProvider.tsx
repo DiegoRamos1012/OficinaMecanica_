@@ -1,3 +1,7 @@
+// ToastProvider.tsx
+// Este arquivo implementa o ToastProvider, responsável por fornecer o contexto de Toast (notificações) para toda a aplicação.
+// Permite exibir mensagens de toast de sucesso, erro, info ou alerta a partir de qualquer componente.
+
 import { useRef } from "react";
 import { Toast } from "primereact/toast";
 import { ToastContext } from "./ToastContext";
