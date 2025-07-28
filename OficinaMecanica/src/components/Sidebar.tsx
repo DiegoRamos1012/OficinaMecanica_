@@ -67,7 +67,7 @@ const Sidebar = () => {
   return (
     <div className="sidebar">
       <div className="sidebar-header">
-        <h2>Oficina Tralalero Tralala</h2>
+        <h2>Oficina Mecânica</h2>
       </div>
       <Menu model={menuItems} className="sidebar-menu" />
     </div>
