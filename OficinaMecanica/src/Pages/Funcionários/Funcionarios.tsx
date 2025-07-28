@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import { Card } from "primereact/card";
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
@@ -6,61 +7,34 @@ import { Button } from "primereact/button";
 import type { Funcionario } from "../../types/types";
 import Header from "../../components/Header";
 import Sidebar from "../../components/Sidebar";
+import api from "../../services/api";
+import "./FuncionariosStyles.css";
 
 const Funcionarios = () => {
+  const [funcionarios, setFuncionarios] = useState<Funcionario[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchFuncionarios = async () => {
+      try {
+        setLoading(true);
+        setError(null);
+        const response = await api.get<Funcionario[]>("/funcionarios");
+        setFuncionarios(response.data);
+      } catch {
+        setError("Erro ao carregar funcionários.");
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchFuncionarios();
+  }, []);
+
   const handleNewEmployee = () => {
     // Implementação futura para criar novo funcionário
     console.log("Criar novo funcionário");
   };
-
-  // Dados de exemplo para funcionários
-  const funcionarios: Funcionario[] = [
-    {
-      id: 1,
-      nome: "Carlos Silva",
-      cargo: "Mecânico",
-      departamento: "Oficina",
-      dataAdmissao: "15/03/2019",
-      status: "Ativo",
-      telefone: "(11) 98765-4321",
-    },
-    {
-      id: 2,
-      nome: "Maria Oliveira",
-      cargo: "Atendente",
-      departamento: "Recepção",
-      dataAdmissao: "22/08/2020",
-      status: "Ativo",
-      telefone: "(11) 97654-3210",
-    },
-    {
-      id: 3,
-      nome: "João Ferreira",
-      cargo: "Mecânico Chefe",
-      departamento: "Oficina",
-      dataAdmissao: "05/12/2017",
-      status: "Ativo",
-      telefone: "(11) 96543-2109",
-    },
-    {
-      id: 4,
-      nome: "Ana Santos",
-      cargo: "Gerente",
-      departamento: "Administração",
-      dataAdmissao: "10/01/2018",
-      status: "Ativo",
-      telefone: "(11) 95432-1098",
-    },
-    {
-      id: 5,
-      nome: "Pedro Costa",
-      cargo: "Auxiliar Mecânico",
-      departamento: "Oficina",
-      dataAdmissao: "28/05/2021",
-      status: "Férias",
-      telefone: "(11) 94321-0987",
-    },
-  ];
 
   const cargoBodyTemplate = (rowData: Funcionario) => {
     return <>{rowData.cargo}</>;
@@ -99,7 +73,6 @@ const Funcionarios = () => {
   return (
     <div className="app-container">
       <Sidebar />
-
       <div className="main-content">
         <Header
           title="Gestão de Funcionários"
@@ -107,92 +80,111 @@ const Funcionarios = () => {
           newButtonLabel="Novo Funcionário"
           onNewButtonClick={handleNewEmployee}
         />
-
-        <div className="grid">
-          <div className="col-12 md:col-6 lg:col-3">
-            <Card title="Total de Funcionários" className="dashboard-card">
-              <div className="text-4xl text-center">15</div>
-              <div className="text-center mt-3">Equipe completa</div>
-            </Card>
+        {loading ? (
+          <div style={{ textAlign: "center", margin: "2rem" }}>
+            Carregando funcionários...
           </div>
-          <div className="col-12 md:col-6 lg:col-3">
-            <Card title="Mecânicos" className="dashboard-card">
-              <div className="text-4xl text-center">8</div>
-              <div className="text-center mt-3">Profissionais técnicos</div>
-            </Card>
-          </div>
-          <div className="col-12 md:col-6 lg:col-3">
-            <Card title="Administrativo" className="dashboard-card">
-              <div className="text-4xl text-center">5</div>
-              <div className="text-center mt-3">Suporte e gestão</div>
-            </Card>
-          </div>
-          <div className="col-12 md:col-6 lg:col-3">
-            <Card title="Em Férias" className="dashboard-card">
-              <div className="text-4xl text-center">2</div>
-              <div className="text-center mt-3">Ausentes temporariamente</div>
-            </Card>
-          </div>
-        </div>
-
-        <div className="section-title">
-          <h2>Lista de Funcionários</h2>
-        </div>
-
-        <div className="card">
-          <DataTable
-            value={funcionarios}
-            paginator
-            rows={5}
-            rowsPerPageOptions={[5, 10, 25]}
-            responsiveLayout="stack"
-            breakpoint="960px"
-            emptyMessage="Nenhum funcionário encontrado"
+        ) : error ? (
+          <div
+            style={{
+              color: "red",
+              textAlign: "center",
+              margin: "2rem",
+            }}
           >
-            <Column
-              field="nome"
-              header="Nome"
-              sortable
-              style={{ minWidth: "200px" }}
-            ></Column>
-            <Column
-              field="cargo"
-              header="Cargo"
-              body={cargoBodyTemplate}
-              sortable
-              style={{ minWidth: "150px" }}
-            ></Column>
-            <Column
-              field="departamento"
-              header="Departamento"
-              sortable
-              style={{ minWidth: "150px" }}
-            ></Column>
-            <Column
-              field="dataAdmissao"
-              header="Data de Admissão"
-              sortable
-              style={{ minWidth: "150px" }}
-            ></Column>
-            <Column
-              field="telefone"
-              header="Telefone"
-              style={{ minWidth: "150px" }}
-            ></Column>
-            <Column
-              field="status"
-              header="Status"
-              body={statusBodyTemplate}
-              sortable
-              style={{ minWidth: "120px" }}
-            ></Column>
-            <Column
-              body={actionBodyTemplate}
-              header="Ações"
-              style={{ minWidth: "150px" }}
-            ></Column>
-          </DataTable>
-        </div>
+            {error}
+          </div>
+        ) : (
+          <>
+            <div className="grid">
+              <div className="col-12 md:col-6 lg:col-3">
+                <Card title="Total de Funcionários" className="dashboard-card">
+                  <div className="text-4xl text-center">15</div>
+                  <div className="text-center mt-3">Equipe completa</div>
+                </Card>
+              </div>
+              <div className="col-12 md:col-6 lg:col-3">
+                <Card title="Mecânicos" className="dashboard-card">
+                  <div className="text-4xl text-center">8</div>
+                  <div className="text-center mt-3">Profissionais técnicos</div>
+                </Card>
+              </div>
+              <div className="col-12 md:col-6 lg:col-3">
+                <Card title="Administrativo" className="dashboard-card">
+                  <div className="text-4xl text-center">5</div>
+                  <div className="text-center mt-3">Suporte e gestão</div>
+                </Card>
+              </div>
+              <div className="col-12 md:col-6 lg:col-3">
+                <Card title="Em Férias" className="dashboard-card">
+                  <div className="text-4xl text-center">2</div>
+                  <div className="text-center mt-3">
+                    Ausentes temporariamente
+                  </div>
+                </Card>
+              </div>
+            </div>
+
+            <div className="section-title">
+              <h2>Lista de Funcionários</h2>
+            </div>
+
+            <div className="card">
+              <DataTable
+                value={funcionarios}
+                paginator
+                rows={5}
+                rowsPerPageOptions={[5, 10, 25]}
+                responsiveLayout="stack"
+                breakpoint="960px"
+                emptyMessage="Nenhum funcionário encontrado"
+              >
+                <Column
+                  field="nome"
+                  header="Nome"
+                  sortable
+                  style={{ minWidth: "200px" }}
+                ></Column>
+                <Column
+                  field="cargo"
+                  header="Cargo"
+                  body={cargoBodyTemplate}
+                  sortable
+                  style={{ minWidth: "150px" }}
+                ></Column>
+                <Column
+                  field="departamento"
+                  header="Departamento"
+                  sortable
+                  style={{ minWidth: "150px" }}
+                ></Column>
+                <Column
+                  field="dataAdmissao"
+                  header="Data de Admissão"
+                  sortable
+                  style={{ minWidth: "150px" }}
+                ></Column>
+                <Column
+                  field="telefone"
+                  header="Telefone"
+                  style={{ minWidth: "150px" }}
+                ></Column>
+                <Column
+                  field="status"
+                  header="Status"
+                  body={statusBodyTemplate}
+                  sortable
+                  style={{ minWidth: "120px" }}
+                ></Column>
+                <Column
+                  body={actionBodyTemplate}
+                  header="Ações"
+                  style={{ minWidth: "150px" }}
+                ></Column>
+              </DataTable>
+            </div>
+          </>
+        )}
       </div>
     </div>
   );

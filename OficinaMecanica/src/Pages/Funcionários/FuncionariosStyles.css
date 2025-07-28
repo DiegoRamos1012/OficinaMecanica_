@@ -1,0 +1,10 @@
+/* Estilos específicos para a página de Funcionários */
+.funcionario-status-ativo {
+  color: var(--success);
+}
+.funcionario-status-ferias {
+  color: var(--warning);
+}
+.funcionario-status-inativo {
+  color: var(--danger);
+}

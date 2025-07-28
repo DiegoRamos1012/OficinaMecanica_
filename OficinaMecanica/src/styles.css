@@ -1127,16 +1127,6 @@ body,
   font-weight: bold;
 }
 
-.funcionario-status-ativo {
-  color: var(--success);
-}
-.funcionario-status-ferias {
-  color: var(--warning);
-}
-.funcionario-status-inativo {
-  color: var(--danger);
-}
-
 /* =====================
    AJUSTES EXTRAS PARA TEMA ESCURO
    ===================== */
