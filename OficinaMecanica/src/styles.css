@@ -789,7 +789,7 @@ button:focus-visible {
   color: #1a365d; /* Azul escuro para melhor contraste */
   font-weight: 700; /* Negrito para destacar */
   position: relative;
-  padding-left: 0.5rem;
+  padding-left: 1rem;
   text-shadow: 0.5px 0.5px 0px rgba(0, 0, 0, 0.1);
 }
 

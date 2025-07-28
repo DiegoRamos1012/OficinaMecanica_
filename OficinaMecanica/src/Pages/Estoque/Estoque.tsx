@@ -343,7 +343,7 @@ const Estoque = () => {
           <Button
             label="Controle de Estoque"
             className="p-button-info"
-            style={{ marginLeft: 12 }}
+            style={{ marginLeft: 15, marginRight: 15 }}
             onClick={() => setShowControleDialog(true)}
           />
         </Header>

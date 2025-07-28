@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { useContext, useMemo, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "primereact/button";
 import { Avatar } from "primereact/avatar";
@@ -23,14 +23,21 @@ const Header = ({
   const { user } = useContext(AuthContext);
   const navigate = useNavigate();
 
-  const renderAvatar = () => {
-    const baseURL = api.defaults.baseURL?.replace(/\/api$/, "") || "";
+  // Memoriza a baseURL para evitar recálculo
+  const baseURL = useMemo(
+    () => api.defaults.baseURL?.replace(/\/api$/, "") || "",
+    []
+  );
+
+  // Memoriza o renderAvatar para evitar recriação
+  const renderAvatar = useCallback(() => {
+    const avatarStyle = { width: "40px", height: "40px" };
     if (user?.avatar && user.avatar !== "[]") {
       return (
         <Avatar
           image={`${baseURL}/${user.avatar.replace(/^\/?/, "")}`}
           shape="circle"
-          style={{ width: "40px", height: "40px" }}
+          style={avatarStyle}
           className="header-avatar"
         />
       );
@@ -40,17 +47,16 @@ const Header = ({
           icon="pi pi-user"
           size="large"
           style={{
+            ...avatarStyle,
             backgroundColor: "var(--surface-border)",
             color: "#ffffff",
-            width: "40px",
-            height: "40px",
           }}
           shape="circle"
           className="header-avatar"
         />
       );
     }
-  };
+  }, [user, baseURL]);
 
   return (
     <div className="content-header">
