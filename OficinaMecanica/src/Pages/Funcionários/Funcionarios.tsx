@@ -9,6 +9,7 @@ import Header from "../../components/Header";
 import Sidebar from "../../components/Sidebar";
 import api from "../../services/api";
 import "./FuncionariosStyles.css";
+import { formatDate } from "../../utils/format";
 
 const Funcionarios = () => {
   const [funcionarios, setFuncionarios] = useState<Funcionario[]>([]);
@@ -20,10 +21,7 @@ const Funcionarios = () => {
       try {
         setLoading(true);
         setError(null);
-        const token = localStorage.getItem("@OficinaMecanica:token");
-        console.log("[Funcionarios] Token enviado:", token);
         const response = await api.get<Funcionario[]>("/funcionarios");
-        console.log("[Funcionarios] Resposta da API:", response);
         setFuncionarios(response.data);
       } catch (err) {
         console.error("[Funcionarios] Erro ao carregar funcionários:", err);
@@ -34,6 +32,10 @@ const Funcionarios = () => {
     };
     fetchFuncionarios();
   }, []);
+
+  const dataAdmissaoBody = (rowData: Funcionario) => {
+    return formatDate(rowData.dataAdmissao);
+  };
 
   const handleNewEmployee = () => {
     // Implementação futura para criar novo funcionário
@@ -74,6 +76,18 @@ const Funcionarios = () => {
     );
   };
 
+  // Cálculo dinâmico dos cards
+  const totalFuncionarios = funcionarios.length;
+  const totalMecanicos = funcionarios.filter((f) =>
+    f.cargo?.toLowerCase().includes("mecanic")
+  ).length;
+  const totalAdministrativo = funcionarios.filter((f) =>
+    f.cargo?.toLowerCase().includes("admin")
+  ).length;
+  const totalFerias = funcionarios.filter(
+    (f) => f.status?.toLowerCase() === "férias"
+  ).length;
+
   return (
     <div className="app-container">
       <Sidebar />
@@ -103,25 +117,29 @@ const Funcionarios = () => {
             <div className="grid">
               <div className="col-12 md:col-6 lg:col-3">
                 <Card title="Total de Funcionários" className="dashboard-card">
-                  <div className="text-4xl text-center">15</div>
+                  <div className="text-4xl text-center">
+                    {totalFuncionarios}
+                  </div>
                   <div className="text-center mt-3">Equipe completa</div>
                 </Card>
               </div>
               <div className="col-12 md:col-6 lg:col-3">
                 <Card title="Mecânicos" className="dashboard-card">
-                  <div className="text-4xl text-center">8</div>
+                  <div className="text-4xl text-center">{totalMecanicos}</div>
                   <div className="text-center mt-3">Profissionais técnicos</div>
                 </Card>
               </div>
               <div className="col-12 md:col-6 lg:col-3">
                 <Card title="Administrativo" className="dashboard-card">
-                  <div className="text-4xl text-center">5</div>
+                  <div className="text-4xl text-center">
+                    {totalAdministrativo}
+                  </div>
                   <div className="text-center mt-3">Suporte e gestão</div>
                 </Card>
               </div>
               <div className="col-12 md:col-6 lg:col-3">
                 <Card title="Em Férias" className="dashboard-card">
-                  <div className="text-4xl text-center">2</div>
+                  <div className="text-4xl text-center">{totalFerias}</div>
                   <div className="text-center mt-3">
                     Ausentes temporariamente
                   </div>
@@ -165,6 +183,7 @@ const Funcionarios = () => {
                 <Column
                   field="dataAdmissao"
                   header="Data de Admissão"
+                  body={dataAdmissaoBody}
                   sortable
                   style={{ minWidth: "150px" }}
                 ></Column>
