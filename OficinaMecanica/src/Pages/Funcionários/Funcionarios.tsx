@@ -4,57 +4,58 @@ import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 import { Tag } from "primereact/tag";
 import { Button } from "primereact/button";
-import type { Funcionario } from "../../types/types";
 import Header from "../../components/Header";
 import Sidebar from "../../components/Sidebar";
 import api from "../../services/api";
 import "./FuncionariosStyles.css";
 import { formatDate } from "../../utils/format";
+import { User } from "../../types/types"
+
+// Novo tipo para refletir o usuário
 
 const Funcionarios = () => {
-  const [funcionarios, setFuncionarios] = useState<Funcionario[]>([]);
+  const [usuarios, setUsuarios] = useState<User[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    const fetchFuncionarios = async () => {
+    const fetchUsuarios = async () => {
       try {
         setLoading(true);
         setError(null);
-        const response = await api.get<Funcionario[]>("/funcionarios");
-        setFuncionarios(response.data);
+        const response = await api.get<User[]>("/usuarios");
+        setUsuarios(response.data);
       } catch (err) {
-        console.error("[Funcionarios] Erro ao carregar funcionários:", err);
-        setError("Erro ao carregar funcionários.");
+        console.error("[Funcionarios] Erro ao carregar usuários:", err);
+        setError("Erro ao carregar usuários.");
       } finally {
         setLoading(false);
       }
     };
-    fetchFuncionarios();
+    fetchUsuarios();
   }, []);
 
-  const dataAdmissaoBody = (rowData: Funcionario) => {
-    return formatDate(rowData.dataAdmissao);
+  const dataAdmissaoBody = (rowData: User) => {
+    return rowData.dataAdmissao ? formatDate(rowData.dataAdmissao) : "-";
   };
 
-  const handleNewEmployee = () => {
-    // Implementação futura para criar novo funcionário
-    console.log("Criar novo funcionário");
-  };
-
-  const cargoBodyTemplate = (rowData: Funcionario) => {
-    return <>{rowData.cargo}</>;
-  };
-
-  const statusBodyTemplate = (rowData: Funcionario) => {
+  const statusBodyTemplate = (rowData: User) => {
+    const status = rowData.status || "";
     const statusSeverity =
-      rowData.status === "Ativo"
+      status.toLowerCase() === "ativo"
         ? "success"
-        : rowData.status === "Férias"
+        : status.toLowerCase() === "férias"
         ? "warning"
         : "danger";
+    return <Tag value={status} severity={statusSeverity} />;
+  };
 
-    return <Tag value={rowData.status} severity={statusSeverity} />;
+  const feriasBodyTemplate = (rowData: User) => {
+    return rowData.ferias ? (
+      <Tag value="Sim" severity="warning" />
+    ) : (
+      <Tag value="Não" severity="success" />
+    );
   };
 
   const actionBodyTemplate = () => {
@@ -77,16 +78,14 @@ const Funcionarios = () => {
   };
 
   // Cálculo dinâmico dos cards
-  const totalFuncionarios = funcionarios.length;
-  const totalMecanicos = funcionarios.filter((f) =>
-    f.cargo?.toLowerCase().includes("mecanic")
+  const totalFuncionarios = usuarios.length;
+  const totalMecanicos = usuarios.filter((u) =>
+    u.cargo?.toLowerCase().includes("mecanic")
   ).length;
-  const totalAdministrativo = funcionarios.filter((f) =>
-    f.cargo?.toLowerCase().includes("admin")
+  const totalAdministrativo = usuarios.filter((u) =>
+    u.cargo?.toLowerCase().includes("admin")
   ).length;
-  const totalFerias = funcionarios.filter(
-    (f) => f.status?.toLowerCase() === "férias"
-  ).length;
+  const totalFerias = usuarios.filter((u) => u.ferias).length;
 
   return (
     <div className="app-container">
@@ -96,7 +95,7 @@ const Funcionarios = () => {
           title="Gestão de Funcionários"
           showNewButton={true}
           newButtonLabel="Novo Funcionário"
-          onNewButtonClick={handleNewEmployee}
+          onNewButtonClick={() => {}}
         />
         {loading ? (
           <div style={{ textAlign: "center", margin: "2rem" }}>
@@ -153,7 +152,7 @@ const Funcionarios = () => {
 
             <div className="card">
               <DataTable
-                value={funcionarios}
+                value={usuarios}
                 paginator
                 rows={5}
                 rowsPerPageOptions={[5, 10, 25]}
@@ -165,45 +164,46 @@ const Funcionarios = () => {
                   field="nome"
                   header="Nome"
                   sortable
-                  style={{ minWidth: "200px" }}
-                ></Column>
+                  style={{ minWidth: "180px" }}
+                />
+                <Column
+                  field="email"
+                  header="Email"
+                  sortable
+                  style={{ minWidth: "180px" }}
+                />
                 <Column
                   field="cargo"
                   header="Cargo"
-                  body={cargoBodyTemplate}
                   sortable
-                  style={{ minWidth: "150px" }}
-                ></Column>
-                <Column
-                  field="departamento"
-                  header="Departamento"
-                  sortable
-                  style={{ minWidth: "150px" }}
-                ></Column>
+                  style={{ minWidth: "120px" }}
+                />
                 <Column
                   field="dataAdmissao"
                   header="Data de Admissão"
                   body={dataAdmissaoBody}
                   sortable
-                  style={{ minWidth: "150px" }}
-                ></Column>
-                <Column
-                  field="telefone"
-                  header="Telefone"
-                  style={{ minWidth: "150px" }}
-                ></Column>
+                  style={{ minWidth: "140px" }}
+                />
                 <Column
                   field="status"
                   header="Status"
                   body={statusBodyTemplate}
                   sortable
                   style={{ minWidth: "120px" }}
-                ></Column>
+                />
+                <Column
+                  field="ferias"
+                  header="Férias"
+                  body={feriasBodyTemplate}
+                  sortable
+                  style={{ minWidth: "100px" }}
+                />
                 <Column
                   body={actionBodyTemplate}
                   header="Ações"
                   style={{ minWidth: "150px" }}
-                ></Column>
+                />
               </DataTable>
             </div>
           </>

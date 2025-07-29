@@ -1,11 +1,15 @@
 // Tipos globais da aplicação
-export type User = {
-  id: string;
+export interface User {
+  id: number;
   nome: string;
   email: string;
   cargo: string;
-  avatar: string;
+  avatar?: string;
+  dataAdmissao?: string | null;
+  status?: string;
+  ferias?: boolean;
 };
+
 export interface AuthContextType {
   user: User | null;
   setUser?: (user: User | null) => void;
@@ -40,16 +44,6 @@ export interface Veiculo {
   proprietario: string;
   status: string;
   ultimaManutencao: string;
-}
-
-export interface Funcionario {
-  id: number;
-  nome: string;
-  cargo: string;
-  departamento: string;
-  dataAdmissao: string;
-  status: string;
-  telefone: string;
 }
 
 export interface Estoque {
