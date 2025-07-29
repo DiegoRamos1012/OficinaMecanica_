@@ -5,3 +5,7 @@ Reverti o problema limpando tudo da tabela e adicionando registros novos, agora 
 26/07/2025
 
 Após estudos, descobri que o motivo seja que a validação de token JWT estava sendo feita duas vezes, o que confundia o CORS. Desde então, não obtive mais erros
+
+29/07/2025
+
+Fui fazer a tela de Funcionários, agora também está com o mesmo erro de cors. Desta vez, limpar o banco e criar novos registros não funciona mais.

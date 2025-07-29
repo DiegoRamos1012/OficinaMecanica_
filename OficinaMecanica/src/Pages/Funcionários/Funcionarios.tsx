@@ -20,9 +20,13 @@ const Funcionarios = () => {
       try {
         setLoading(true);
         setError(null);
+        const token = localStorage.getItem("@OficinaMecanica:token");
+        console.log("[Funcionarios] Token enviado:", token);
         const response = await api.get<Funcionario[]>("/funcionarios");
+        console.log("[Funcionarios] Resposta da API:", response);
         setFuncionarios(response.data);
-      } catch {
+      } catch (err) {
+        console.error("[Funcionarios] Erro ao carregar funcionários:", err);
         setError("Erro ao carregar funcionários.");
       } finally {
         setLoading(false);

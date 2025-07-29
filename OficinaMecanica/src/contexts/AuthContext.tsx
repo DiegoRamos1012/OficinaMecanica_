@@ -65,6 +65,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, [logout]); // logout como dependência porque é usado dentro da função
 
   useEffect(() => {
+    let isMounted = true;
     const loadUser = async () => {
       const storedUser = localStorage.getItem("@OficinaMecanica:user");
       const token = localStorage.getItem("@OficinaMecanica:token");
@@ -74,18 +75,21 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           // Verifica se o token ainda é válido
           const isValid = await checkTokenValidity();
 
-          if (isValid) {
+          if (isMounted && isValid) {
             setUser(JSON.parse(storedUser));
           }
         } catch {
-          logout();
+          if (isMounted) logout();
         }
       }
 
-      setLoading(false);
+      if (isMounted) setLoading(false);
     };
 
     loadUser();
+    return () => {
+      isMounted = false;
+    };
   }, [checkTokenValidity, logout]);
 
   async function login(email: string, senha: string): Promise<boolean> {
