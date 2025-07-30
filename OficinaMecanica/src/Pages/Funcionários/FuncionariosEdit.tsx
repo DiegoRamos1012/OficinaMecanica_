@@ -80,7 +80,6 @@ const FuncionariosEdit = ({
         </div>
         <div className="p-field mb-3">
           <label htmlFor="dataAdmissao">Data de Admissão</label>
-          {/*TODO: Adicionar localização brasileira ao calendário*/}
           <Calendar
             id="dataAdmissao"
             value={dataAdmissao ? new Date(dataAdmissao) : undefined}
@@ -91,8 +90,6 @@ const FuncionariosEdit = ({
             showIcon
             touchUI
             locale="pt"
-            style={{ width: "100%" }}
-            className="theme-calendar"
           />
         </div>
         <div className="p-field mb-3">

@@ -5,7 +5,6 @@ import App from "./App.tsx";
 import ptBR from "./utils/locales.ts";
 import "./styles.css";
 
-// Adiciona o objeto ptBR como locale "pt"
 addLocale("pt", ptBR);
 
 createRoot(document.getElementById("root")!).render(

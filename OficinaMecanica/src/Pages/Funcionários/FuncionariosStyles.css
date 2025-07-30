@@ -111,45 +111,68 @@
 }
 
 /* Calendar customizado para dialog de funcionários */
+/* Container do calendário, define largura total */
 .theme-calendar .p-calendar {
   width: 100%;
 }
+/* Input do calendário, estiliza o campo de data (mais compacto) */
 .theme-calendar .p-inputtext {
   border-radius: 6px;
-  font-size: 1rem;
+  font-size: 0.95rem;
   border: 1px solid var(--border);
   background: var(--card-bg);
   color: var(--text);
   transition: border-color 0.2s;
+  padding: 0.35rem 0.5rem;
+  height: 2rem;
 }
+/* Input do calendário em foco */
 .theme-calendar .p-inputtext:focus {
   border-color: var(--primary);
   outline: none;
 }
+/* Caixa do calendário (popup) mais compacta */
 .theme-calendar .p-datepicker {
   background: var(--card-bg);
   color: var(--text);
   border-radius: 8px;
   border: 1px solid var(--border);
+  padding: 0.5rem 0.5rem 0.3rem 0.5rem;
 }
+/* Cabeçalho do calendário (mês/ano e navegação) mais compacto */
 .theme-calendar .p-datepicker-header {
   background: var(--background-alt);
   color: var(--text);
   border-bottom: 1px solid var(--border);
+  padding: 0.3rem 0.5rem;
 }
+/* Título do calendário (mês e ano) menor */
 .theme-calendar .p-datepicker-title {
   color: var(--primary);
+  font-size: 1rem;
 }
+/* Dias destacados (selecionados ou em foco) */
 .theme-calendar .p-datepicker .p-highlight {
   background: var(--primary);
   color: var(--text-light);
 }
+/* Dia do calendário mais compacto */
+.theme-calendar .p-datepicker .p-datepicker-day {
+  min-width: 1.8rem;
+  height: 1.8rem;
+  font-size: 0.95rem;
+  margin: 0.1rem;
+  padding: 0;
+}
+/* Dia atual (borda) */
 .theme-calendar .p-datepicker .p-datepicker-today {
   border-color: var(--primary);
 }
+/* Texto do dia atual */
 .theme-calendar .p-datepicker .p-datepicker-today span {
   color: var(--primary);
 }
+/* Dia selecionado e em destaque */
 .theme-calendar .p-datepicker .p-datepicker-day.p-highlight {
   background: var(--primary) !important;
   color: var(--text-light) !important;
