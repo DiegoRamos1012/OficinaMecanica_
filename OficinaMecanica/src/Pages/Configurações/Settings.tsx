@@ -67,8 +67,9 @@ const Settings = () => {
     // eslint-disable-next-line
   }, []);
 
-  // Salva a escolha do tema no contexto apenas ao salvar preferências
+  // Salva a escolha do tema no contexto e localStorage ao salvar preferências
   const handleSavePreferences = () => {
+    setTheme(temaSelecionado); // Garante atualização do contexto global
     localStorage.setItem("app-theme", temaSelecionado);
     showToast("Preferências salvas com sucesso!", "success");
   };
@@ -83,7 +84,7 @@ const Settings = () => {
         ...user,
         nome: nome,
         email: email,
-        id: user?.id ?? "",
+        id: typeof user?.id === "number" ? user.id : Number(user?.id) || 0,
         cargo: user?.cargo ?? "",
         avatar: user?.avatar ?? "",
       };
@@ -214,6 +215,10 @@ const Settings = () => {
                                     const updatedUser = {
                                       ...user,
                                       avatar: "",
+                                      id:
+                                        typeof user?.id === "number"
+                                          ? user.id
+                                          : Number(user?.id) || 0,
                                     };
                                     localStorage.setItem(
                                       "@OficinaMecanica:user",
@@ -273,11 +278,13 @@ const Settings = () => {
                               formData
                             );
                             if (response.status === 200) {
-                              setAvatarUrl(response.data.avatar);
                               const updatedUser = {
                                 ...user,
                                 avatar: response.data.avatar,
-                                id: user?.id ?? "",
+                                id:
+                                  typeof user?.id === "number"
+                                    ? user.id
+                                    : Number(user?.id) || 0,
                                 nome: user?.nome ?? "",
                                 email: user?.email ?? "",
                                 cargo: user?.cargo ?? "",
@@ -286,6 +293,7 @@ const Settings = () => {
                                 "@OficinaMecanica:user",
                                 JSON.stringify(updatedUser)
                               );
+                              if (setUser) setUser(updatedUser);
                               if (setUser) setUser(updatedUser);
                               showToast("Avatar atualizado!", "success");
                             }

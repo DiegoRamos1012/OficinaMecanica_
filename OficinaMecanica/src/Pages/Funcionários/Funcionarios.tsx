@@ -9,9 +9,7 @@ import Sidebar from "../../components/Sidebar";
 import api from "../../services/api";
 import "./FuncionariosStyles.css";
 import { formatDate } from "../../utils/format";
-import { User } from "../../types/types"
-
-// Novo tipo para refletir o usuário
+import { User } from "../../types/types";
 
 const Funcionarios = () => {
   const [usuarios, setUsuarios] = useState<User[]>([]);
@@ -23,7 +21,12 @@ const Funcionarios = () => {
       try {
         setLoading(true);
         setError(null);
-        const response = await api.get<User[]>("/usuarios");
+        const token = localStorage.getItem("@OficinaMecanica:token");
+        const response = await api.get<User[]>("/usuarios", {
+          headers: {
+            Authorization: token ? `Bearer ${token}` : "",
+          },
+        });
         setUsuarios(response.data);
       } catch (err) {
         console.error("[Funcionarios] Erro ao carregar usuários:", err);
