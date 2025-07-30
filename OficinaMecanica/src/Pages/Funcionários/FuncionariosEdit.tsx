@@ -89,6 +89,8 @@ const FuncionariosEdit = ({
             }
             dateFormat="dd/mm/yy"
             showIcon
+            touchUI
+            locale="pt"
             style={{ width: "100%" }}
             className="theme-calendar"
           />
