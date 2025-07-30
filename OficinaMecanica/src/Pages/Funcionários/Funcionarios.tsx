@@ -10,10 +10,15 @@ import api from "../../services/api";
 import "./FuncionariosStyles.css";
 import { formatDate } from "../../utils/format";
 import { User } from "../../types/types";
+import FuncionariosEdit from "./FuncionariosEdit";
 
 const Funcionarios = () => {
   const [usuarios, setUsuarios] = useState<User[]>([]);
   const [loading, setLoading] = useState(true);
+  const [showEditDialog, setShowEditDialog] = useState(false);
+  const [usuarioSelecionado, setUsuarioSelecionado] = useState<User | null>(
+    null
+  );
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
@@ -61,7 +66,29 @@ const Funcionarios = () => {
     );
   };
 
-  const actionBodyTemplate = () => {
+  const handleEditUsuario = (usuario: User) => {
+    setUsuarioSelecionado(usuario);
+    setShowEditDialog(true);
+  };
+
+  const handleSaveUsuario = async (dados: Partial<User>) => {
+    if (!dados.id) return;
+    try {
+      const token = localStorage.getItem("@OficinaMecanica:token");
+      await api.put(`/usuarios/${dados.id}`, dados, {
+        headers: { Authorization: token ? `Bearer ${token}` : "" },
+      });
+      // Atualiza lista após edição
+      const response = await api.get<User[]>("/usuarios", {
+        headers: { Authorization: token ? `Bearer ${token}` : "" },
+      });
+      setUsuarios(response.data);
+    } catch (err){
+      console.log("Erro ao salvar usuário: ", err)
+    }
+  };
+
+  const actionBodyTemplate = (rowData: User) => {
     return (
       <div className="action-buttons">
         <Button
@@ -71,6 +98,7 @@ const Funcionarios = () => {
         <Button
           icon="pi pi-pencil"
           className="p-button-rounded p-button-success p-button-sm mr-2"
+          onClick={() => handleEditUsuario(rowData)}
         />
         <Button
           icon="pi pi-trash"
@@ -211,6 +239,12 @@ const Funcionarios = () => {
             </div>
           </>
         )}
+        <FuncionariosEdit
+          visible={showEditDialog}
+          onHide={() => setShowEditDialog(false)}
+          usuario={usuarioSelecionado}
+          onSave={handleSaveUsuario}
+        />
       </div>
     </div>
   );
