@@ -9,3 +9,7 @@ Após estudos, descobri que o motivo seja que a validação de token JWT estava 
 29/07/2025
 
 Fui fazer a tela de Funcionários, agora também está com o mesmo erro de cors. Desta vez, limpar o banco e criar novos registros não funciona mais.
+
+30/07/2025
+
+Desisti de tentar resolver o erro do CORS, então eu criei um arquivo .bat que abre o Google Chrome sem o CORS. Agora uso este navegador para poder desenvolver este projeto
