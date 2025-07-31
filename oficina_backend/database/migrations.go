@@ -12,7 +12,7 @@ import (
 // VerifyTablesExist verifica se as principais tabelas já existem no banco de dados
 func VerifyTablesExist(db *gorm.DB) (bool, error) {
 	var count int64
-	requiredTables := []string{"usuarios", "clientes", "funcionarios", "veiculos", "estoques", "ordem_servicos", "item_ordem_servicos"}
+	requiredTables := []string{"usuarios", "clientes", "veiculos", "estoques", "ordem_servicos", "item_ordem_servicos"}
 
 	for _, table := range requiredTables {
 		result := db.Raw("SELECT COUNT(1) FROM information_schema.tables WHERE table_schema = DATABASE() AND table_name = ?", table).Scan(&count)
@@ -58,7 +58,6 @@ func SetupMigrations(db *gorm.DB) error {
 		&models.Estoque{},
 
 		// 2. Tabelas com dependências
-		&models.Funcionario{},
 		&models.Veiculo{},
 
 		// 3. Tabelas que dependem das anteriores
