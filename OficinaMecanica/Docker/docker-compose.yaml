@@ -1,0 +1,51 @@
+version: "3.8"
+services:
+  backend:
+    build:
+      context: ../oficina_backend
+      dockerfile: Dockerfile
+    container_name: oficina-backend
+    ports:
+      - "8080:8080"
+    restart: unless-stopped
+    networks:
+      - oficina-net
+    environment:
+      - DB_HOST=mysql
+      - DB_USER=root
+      - DB_PASSWORD=senha123
+      - DB_NAME=oficina
+
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: oficina-frontend
+    ports:
+      - "3000:3000"
+    restart: unless-stopped
+    networks:
+      - oficina-net
+    environment:
+      - VITE_API_URL=http://backend:8080
+
+  mysql:
+    image: mysql:8.0
+    container_name: oficina-mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: senha123
+      MYSQL_DATABASE: oficina
+    ports:
+      - "3306:3306"
+    networks:
+      - oficina-net
+    volumes:
+      - mysql_data:/var/lib/mysql
+
+networks:
+  oficina-net:
+    driver: bridge
+
+volumes:
+  mysql_data:
