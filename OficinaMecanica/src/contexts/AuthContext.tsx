@@ -4,6 +4,8 @@
 // incluindo login, logout, registro, validação de token e persistência dos dados do usuário.
 // O contexto é utilizado por toda a aplicação para acessar e modificar informações de autenticação.
 
+//aa
+
 import {
   createContext,
   useState,
