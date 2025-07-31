@@ -5,6 +5,7 @@ import (
 	"net/http"
 	"os"
 	"strconv"
+	"time"
 
 	"github.com/gin-gonic/gin"
 
@@ -12,16 +13,19 @@ import (
 	"OficinaMecanica/services"
 )
 
+// UsuarioController é responsável por lidar com as requisições relacionadas a usuários.
 type UsuarioController struct {
 	usuarioService services.UsuarioService
 }
 
+// NewUsuarioController cria uma nova instância do controller, recebendo o service como dependência.
 func NewUsuarioController(usuarioService services.UsuarioService) *UsuarioController {
 	return &UsuarioController{
 		usuarioService: usuarioService,
 	}
 }
 
+// BuscarTodos retorna todos os usuários cadastrados, removendo a senha dos resultados.
 func (c *UsuarioController) BuscarTodos(ctx *gin.Context) {
 	usuarios, err := c.usuarioService.BuscarTodos()
 	if err != nil {
@@ -46,6 +50,7 @@ func (c *UsuarioController) BuscarTodos(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, usuariosSemSenha)
 }
 
+// BuscarPorID retorna um usuário específico pelo ID, removendo a senha do resultado.
 func (c *UsuarioController) BuscarPorID(ctx *gin.Context) {
 	id, err := strconv.Atoi(ctx.Param("id"))
 	if err != nil {
@@ -71,6 +76,7 @@ func (c *UsuarioController) BuscarPorID(ctx *gin.Context) {
 	})
 }
 
+// Criar cadastra um novo usuário no sistema, validando se o e-mail já está em uso.
 func (c *UsuarioController) Criar(ctx *gin.Context) {
 	var usuario models.Usuario
 
@@ -104,6 +110,7 @@ func (c *UsuarioController) Criar(ctx *gin.Context) {
 	})
 }
 
+// Atualizar altera os dados de um usuário existente (nome e email).
 func (c *UsuarioController) Atualizar(ctx *gin.Context) {
 	id, err := strconv.Atoi(ctx.Param("id"))
 	if err != nil {
@@ -112,8 +119,13 @@ func (c *UsuarioController) Atualizar(ctx *gin.Context) {
 	}
 
 	type UpdateUsuarioDTO struct {
-		Nome  string `json:"nome"`
-		Email string `json:"email"`
+		Nome         string     `json:"nome"`
+		Email        string     `json:"email"`
+		Cargo        string     `json:"cargo" gorm:"size:20;default:'usuário'"`
+		Avatar       string     `json:"avatar"`
+		DataAdmissao *time.Time `json:"dataAdmissao" gorm:"column:data_admissao"`
+		Status       string     `json:"status" gorm:"column:status"`
+		Ferias       *bool      `json:"ferias" gorm:"column:ferias"`
 	}
 	var input UpdateUsuarioDTO
 	if err := ctx.ShouldBindJSON(&input); err != nil {
@@ -126,12 +138,26 @@ func (c *UsuarioController) Atualizar(ctx *gin.Context) {
 		ctx.JSON(http.StatusNotFound, gin.H{"error": "Usuário não encontrado"})
 		return
 	}
-
 	if input.Nome != "" {
 		usuario.Nome = input.Nome
 	}
 	if input.Email != "" {
 		usuario.Email = input.Email
+	}
+	if input.DataAdmissao != nil { // nil = valor nulo
+		usuario.DataAdmissao = input.DataAdmissao
+	}
+	if input.Status != "" {
+		usuario.Status = input.Status
+	}
+	if input.Ferias != nil {
+		usuario.Ferias = *input.Ferias
+	}
+	if input.Cargo != "" {
+		usuario.Cargo = input.Cargo
+	}
+	if input.Avatar != "" {
+		usuario.Avatar = input.Avatar
 	}
 
 	usuarioAtualizado, err := c.usuarioService.Atualizar(usuario)
@@ -151,6 +177,7 @@ func (c *UsuarioController) Atualizar(ctx *gin.Context) {
 	})
 }
 
+// AlterarSenha permite que o usuário altere sua senha, validando a senha atual.
 func (c *UsuarioController) AlterarSenha(ctx *gin.Context) {
 	id, err := strconv.Atoi(ctx.Param("id"))
 	if err != nil {
@@ -178,6 +205,7 @@ func (c *UsuarioController) AlterarSenha(ctx *gin.Context) {
 	ctx.Status(http.StatusNoContent)
 }
 
+// Desativar desativa um usuário (define o status como inativo).
 func (c *UsuarioController) Desativar(ctx *gin.Context) {
 	id, err := strconv.Atoi(ctx.Param("id"))
 	if err != nil {
@@ -194,6 +222,7 @@ func (c *UsuarioController) Desativar(ctx *gin.Context) {
 	ctx.Status(http.StatusNoContent)
 }
 
+// Ativar ativa um usuário (define o status como ativo).
 func (c *UsuarioController) Ativar(ctx *gin.Context) {
 	id, err := strconv.Atoi(ctx.Param("id"))
 	if err != nil {
@@ -210,6 +239,7 @@ func (c *UsuarioController) Ativar(ctx *gin.Context) {
 	ctx.Status(http.StatusNoContent)
 }
 
+// Deletar remove um usuário do sistema permanentemente.
 func (c *UsuarioController) Deletar(ctx *gin.Context) {
 	id, err := strconv.Atoi(ctx.Param("id"))
 	if err != nil {
@@ -226,6 +256,7 @@ func (c *UsuarioController) Deletar(ctx *gin.Context) {
 	ctx.Status(http.StatusNoContent)
 }
 
+// UploadAvatar faz o upload de uma imagem de avatar para o usuário, removendo o avatar antigo se existir.
 func (c *UsuarioController) UploadAvatar(ctx *gin.Context) {
 	id, err := strconv.Atoi(ctx.Param("id"))
 	if err != nil {
