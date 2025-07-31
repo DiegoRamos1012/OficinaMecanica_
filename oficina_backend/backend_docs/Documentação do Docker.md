@@ -108,22 +108,26 @@ mysql:
 
 ## 🚀 Como rodar o projeto
 
-1. Certifique-se de ter o [Docker](https://www.docker.com/) e o [Docker Compose](https://docs.docker.com/compose/) instalados. Se estiver utilizando Scoop, use os comandos "scoop install docker" e "scoop install docker-compose".
-2. Clone o repositório do projeto.
-3. Navegue até o diretório onde está o arquivo `docker-compose.yaml` (normalmente `OficinaMecanica`).
-4. Execute o comando abaixo para construir e iniciar todos os containers:
+1. **Instale o [Docker Desktop](https://www.docker.com/products/docker-desktop/)** no seu computador (necessário para Windows e Mac). Ele é o serviço que executa os containers Docker localmente.
+2. Certifique-se de que o Docker Desktop está aberto e rodando (ícone do Docker deve estar ativo na barra de tarefas).
+3. (Opcional) Se estiver utilizando Scoop, use os comandos "scoop install docker" e "scoop install docker-compose" para instalar as ferramentas de linha de comando.
+4. Clone o repositório do projeto.
+5. Navegue até o diretório onde está o arquivo `docker-compose.yaml` (normalmente `OficinaMecanica`).
+6. Execute o comando abaixo para construir e iniciar todos os containers:
 
 ```sh
 docker-compose up --build
 ```
+Mantém o terminal ocupado mostrando os logs dos containers. Você vê tudo que está acontecendo em tempo real e pode parar todos os containers pressionando Ctrl+C.
 
-5. Para rodar em segundo plano (background):
+7. Para rodar em segundo plano (background):
 
 ```sh
 docker-compose up --build -d
 ```
+O -d significa "detached" (em segundo plano). Os containers rodam em background e o terminal fica livre para outros comandos. Você não vê os logs diretamente, mas pode ver depois com docker-compose logs.8. 
 
-6. Para parar todos os containers:
+Para parar todos os containers:
 
 ```sh
 docker-compose down
