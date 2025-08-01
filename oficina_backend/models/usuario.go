@@ -19,7 +19,7 @@ type Usuario struct {
 	UpdatedAt    time.Time      `json:"atualizadoEm" gorm:"autoUpdateTime"`
 	DeletedAt    gorm.DeletedAt `json:"-" gorm:"index"`
 	Avatar       string         `json:"avatar"`
-	DataAdmissao *time.Time     `json:"dataAdmissao" gorm:"column:data_admissao"`
+	DataAdmissao *time.Time     `json:"dataAdmissao" gorm:"column:data_admissao;type:date"`
 	Status       string         `json:"status" gorm:"column:status"`
 	Ferias       bool           `json:"ferias" gorm:"column:ferias"`
 

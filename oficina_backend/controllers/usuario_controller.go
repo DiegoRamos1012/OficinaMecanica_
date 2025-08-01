@@ -123,7 +123,7 @@ func (c *UsuarioController) Atualizar(ctx *gin.Context) {
 		Email        string     `json:"email"`
 		Cargo        string     `json:"cargo" gorm:"size:20;default:'usuário'"`
 		Avatar       string     `json:"avatar"`
-		DataAdmissao *time.Time `json:"dataAdmissao" gorm:"column:data_admissao"`
+		DataAdmissao *time.Time `json:"dataAdmissao" gorm:"column:data_admissao;type:date"`
 		Status       string     `json:"status" gorm:"column:status"`
 		Ferias       *bool      `json:"ferias" gorm:"column:ferias"`
 	}
@@ -270,6 +270,8 @@ func (c *UsuarioController) UploadAvatar(ctx *gin.Context) {
 		return
 	}
 
+	fmt.Println("[LOG] UploadAvatar chamado para usuário:", id)
+
 	// Garante que a pasta exista
 	os.MkdirAll("uploads/avatars", os.ModePerm)
 
@@ -292,6 +294,8 @@ func (c *UsuarioController) UploadAvatar(ctx *gin.Context) {
 		ctx.JSON(http.StatusInternalServerError, gin.H{"error": "Erro ao atualizar avatar"})
 		return
 	}
+
+	fmt.Println("[LOG] Avatar atualizado para:", filename)
 
 	ctx.JSON(http.StatusOK, gin.H{"avatar": filename})
 }
