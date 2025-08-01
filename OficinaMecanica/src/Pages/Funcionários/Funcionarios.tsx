@@ -44,8 +44,10 @@ const Funcionarios = () => {
   }, []);
 
   const dataAdmissaoBody = (rowData: User) => {
-    return rowData.dataAdmissao ? formatDate(rowData.dataAdmissao) : "-";
-  };
+  if (!rowData.dataAdmissao) return "-";
+  const date = new Date(rowData.dataAdmissao);
+  return formatDate(date);
+};
 
   const statusBodyTemplate = (rowData: User) => {
     const status = rowData.status || "";
@@ -83,8 +85,8 @@ const Funcionarios = () => {
         headers: { Authorization: token ? `Bearer ${token}` : "" },
       });
       setUsuarios(response.data);
-    } catch (err){
-      console.log("Erro ao salvar usuário: ", err)
+    } catch (err) {
+      console.log("Erro ao salvar usuário: ", err);
     }
   };
 

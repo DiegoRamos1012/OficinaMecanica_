@@ -42,8 +42,11 @@ func (c *UsuarioController) BuscarTodos(ctx *gin.Context) {
 			"email":            u.Email,
 			"cargo":            u.Cargo,
 			"ultimo_login":     u.UltimoLogin,
+			"dataAdmissao":     u.DataAdmissao,
 			"data_criacao":     u.CreatedAt,
 			"data_atualizacao": u.UpdatedAt,
+			"status":           u.Status,
+			"ferias":           u.Ferias,
 		}
 	}
 
@@ -71,8 +74,11 @@ func (c *UsuarioController) BuscarPorID(ctx *gin.Context) {
 		"email":            usuario.Email,
 		"cargo":            usuario.Cargo,
 		"ultimo_login":     usuario.UltimoLogin,
+		"dataAdmissao":     usuario.DataAdmissao,
 		"data_criacao":     usuario.CreatedAt,
 		"data_atualizacao": usuario.UpdatedAt,
+		"status":           usuario.Status,
+		"ferias":           usuario.Ferias,
 	})
 }
 
@@ -105,8 +111,11 @@ func (c *UsuarioController) Criar(ctx *gin.Context) {
 		"email":            usuarioCriado.Email,
 		"cargo":            usuarioCriado.Cargo,
 		"ultimo_login":     usuarioCriado.UltimoLogin,
+		"dataAdmissao":     usuarioCriado.DataAdmissao,
 		"data_criacao":     usuarioCriado.CreatedAt,
 		"data_atualizacao": usuarioCriado.UpdatedAt,
+		"status":           usuarioCriado.Status,
+		"ferias":           usuarioCriado.Ferias,
 	})
 }
 
@@ -172,8 +181,11 @@ func (c *UsuarioController) Atualizar(ctx *gin.Context) {
 		"email":            usuarioAtualizado.Email,
 		"cargo":            usuarioAtualizado.Cargo,
 		"ultimo_login":     usuarioAtualizado.UltimoLogin,
+		"dataAdmissao":     usuarioAtualizado.DataAdmissao,
 		"data_criacao":     usuarioAtualizado.CreatedAt,
 		"data_atualizacao": usuarioAtualizado.UpdatedAt,
+		"status":           usuarioAtualizado.Status,
+		"ferias":           usuarioAtualizado.Ferias,
 	})
 }
 

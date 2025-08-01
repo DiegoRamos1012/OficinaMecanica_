@@ -87,6 +87,7 @@ const FuncionariosEdit = ({
               setDataAdmissao(e.value ? (e.value as Date).toISOString() : null)
             }
             dateFormat="dd/mm/yy"
+            placeholder="Selecione a data"
             showIcon
             touchUI
             locale="pt"
