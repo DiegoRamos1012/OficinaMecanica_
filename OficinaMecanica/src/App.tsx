@@ -11,13 +11,10 @@ import { ProgressSpinner } from "primereact/progressspinner";
 const AppRoutes = lazy(() => import("./routes/routes"));
 
 console.log(
-  "Bem vindo ao meu projeto de Oficina Mecânica! (Status: Em desenvolvimento)"
+  "Bem vindo ao meu projeto de Oficina Mecânica 🚗🔧! (Status: Em desenvolvimento)"
 );
 console.log(
-  "Repositório Frontend: https://github.com/DiegoRamos1012/OficinaMecanica"
-);
-console.log(
-  "Repositório Backend: https://github.com/DiegoRamos1012/oficina_backend"
+  "Repositório do projeto: https://github.com/DiegoRamos1012/OficinaMecanica"
 );
 
 function App() {
