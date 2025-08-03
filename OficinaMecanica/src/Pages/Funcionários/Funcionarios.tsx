@@ -44,19 +44,29 @@ const Funcionarios = () => {
   }, []);
 
   const dataAdmissaoBody = (rowData: User) => {
-  if (!rowData.dataAdmissao) return "-";
-  const date = new Date(rowData.dataAdmissao);
-  return formatDate(date);
-};
+    if (!rowData.dataAdmissao) return "-";
+    const date = new Date(rowData.dataAdmissao);
+    return formatDate(date);
+  };
 
   const statusBodyTemplate = (rowData: User) => {
     const status = rowData.status || "";
-    const statusSeverity =
-      status.toLowerCase() === "ativo"
-        ? "success"
-        : status.toLowerCase() === "férias"
-        ? "warning"
-        : "danger";
+    let statusSeverity: "success" | "danger" | "warning" = "danger";
+
+    switch (status.toLowerCase()) {
+      case "ativo":
+        statusSeverity = "success";
+        break;
+      case "em treinamento":
+        statusSeverity = "warning";
+        break;
+      case "inativo":
+        statusSeverity = "danger";
+        break;
+      default:
+        statusSeverity = "danger";
+    }
+
     return <Tag value={status} severity={statusSeverity} />;
   };
 
@@ -113,10 +123,10 @@ const Funcionarios = () => {
   // Cálculo dinâmico dos cards
   const totalFuncionarios = usuarios.length;
   const totalMecanicos = usuarios.filter((u) =>
-    u.cargo?.toLowerCase().includes("mecanic")
+    u.cargo?.toLowerCase().includes("mecânico")
   ).length;
   const totalAdministrativo = usuarios.filter((u) =>
-    u.cargo?.toLowerCase().includes("admin")
+    u.cargo?.toLowerCase().includes("administrativo")
   ).length;
   const totalFerias = usuarios.filter((u) => u.ferias).length;
 
@@ -124,12 +134,7 @@ const Funcionarios = () => {
     <div className="app-container">
       <Sidebar />
       <div className="main-content">
-        <Header
-          title="Gestão de Funcionários"
-          showNewButton={true}
-          newButtonLabel="Novo Funcionário"
-          onNewButtonClick={() => {}}
-        />
+        <Header title="Gestão de Funcionários" />
         {loading ? (
           <div style={{ textAlign: "center", margin: "2rem" }}>
             Carregando funcionários...

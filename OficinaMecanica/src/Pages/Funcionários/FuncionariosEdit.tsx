@@ -16,13 +16,14 @@ interface FuncionariosEditProps {
 const statusOptions = [
   { label: "Ativo", value: "Ativo" },
   { label: "Inativo", value: "Inativo" },
+  { label: "Em Treinamento", value: "Em treinamento"}
 ];
 
 const cargoOptions = [
-  { label: "Mecânico", value: "Mecânico" },
-  { label: "Administrativo", value: "Administrativo" },
-  { label: "Gerente", value: "Gerente" },
-  { label: "Outro", value: "Outro" },
+  { label: "Mecânico/a", value: "mecânico/a" },
+  { label: "Administrativo", value: "administrativo" },
+  { label: "Gerente", value: "gerente" },
+  { label: "Outro", value: "outro" },
 ];
 
 const FuncionariosEdit = ({
