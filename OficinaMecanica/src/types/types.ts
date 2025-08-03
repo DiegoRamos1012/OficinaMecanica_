@@ -4,6 +4,7 @@ export interface User {
   nome: string;
   email: string;
   cargo: string;
+  cpf: string;
   avatar?: string;
   dataAdmissao?: string | null;
   status?: string;

@@ -11,11 +11,13 @@ import "./FuncionariosStyles.css";
 import { formatDate } from "../../utils/format";
 import { User } from "../../types/types";
 import FuncionariosEdit from "./FuncionariosEdit";
+import FuncionariosView from "./FuncionarioView";
 
 const Funcionarios = () => {
   const [usuarios, setUsuarios] = useState<User[]>([]);
   const [loading, setLoading] = useState(true);
   const [showEditDialog, setShowEditDialog] = useState(false);
+  const [showViewDialog, setShowViewDialog] = useState(false);
   const [usuarioSelecionado, setUsuarioSelecionado] = useState<User | null>(
     null
   );
@@ -83,6 +85,11 @@ const Funcionarios = () => {
     setShowEditDialog(true);
   };
 
+  const handleViewUsuario = (usuario: User) => {
+    setUsuarioSelecionado(usuario)
+    setShowViewDialog(true)
+  }
+
   const handleSaveUsuario = async (dados: Partial<User>) => {
     if (!dados.id) return;
     try {
@@ -106,6 +113,7 @@ const Funcionarios = () => {
         <Button
           icon="pi pi-eye"
           className="p-button-rounded p-button-info p-button-sm mr-2"
+          onClick={() => handleViewUsuario(rowData)}
         />
         <Button
           icon="pi pi-pencil"
@@ -249,6 +257,12 @@ const Funcionarios = () => {
         <FuncionariosEdit
           visible={showEditDialog}
           onHide={() => setShowEditDialog(false)}
+          usuario={usuarioSelecionado}
+          onSave={handleSaveUsuario}
+        />
+        <FuncionariosView
+          visible={showViewDialog}
+          onHide={() => setShowViewDialog(false)}
           usuario={usuarioSelecionado}
           onSave={handleSaveUsuario}
         />

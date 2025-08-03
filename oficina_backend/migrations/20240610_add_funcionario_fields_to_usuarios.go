@@ -15,5 +15,8 @@ func AddFuncionarioFieldsToUsuarios(db *gorm.DB) error {
 	if err := db.Exec(`ALTER TABLE usuarios ADD COLUMN IF NOT EXISTS ferias BOOLEAN DEFAULT FALSE`).Error; err != nil {
 		return err
 	}
+	if err := db.Exec(`ALTER TABLE usuarios ADD COLUMN IF NOT EXISTS cpf VARCHAR(11) NOT NULL UNIQUE`).Error; err != nil {
+		return err 
+	}
 	return nil
 }

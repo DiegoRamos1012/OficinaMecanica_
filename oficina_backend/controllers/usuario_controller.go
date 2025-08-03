@@ -41,6 +41,7 @@ func (c *UsuarioController) BuscarTodos(ctx *gin.Context) {
 			"nome":             u.Nome,
 			"email":            u.Email,
 			"cargo":            u.Cargo,
+			"cpf":              u.Cpf,
 			"ultimo_login":     u.UltimoLogin,
 			"dataAdmissao":     u.DataAdmissao,
 			"data_criacao":     u.CreatedAt,
@@ -73,6 +74,7 @@ func (c *UsuarioController) BuscarPorID(ctx *gin.Context) {
 		"nome":             usuario.Nome,
 		"email":            usuario.Email,
 		"cargo":            usuario.Cargo,
+		"cpf":              usuario.Cpf,
 		"ultimo_login":     usuario.UltimoLogin,
 		"dataAdmissao":     usuario.DataAdmissao,
 		"data_criacao":     usuario.CreatedAt,
@@ -131,6 +133,7 @@ func (c *UsuarioController) Atualizar(ctx *gin.Context) {
 		Nome         string     `json:"nome"`
 		Email        string     `json:"email"`
 		Cargo        string     `json:"cargo" gorm:"size:20;default:'usuário'"`
+		Cpf          string     `json:"cpf" gorm:"unique;size:11;column:cpf"`
 		Avatar       string     `json:"avatar"`
 		DataAdmissao *time.Time `json:"dataAdmissao" gorm:"column:data_admissao;type:date"`
 		Status       string     `json:"status" gorm:"column:status"`
@@ -168,6 +171,9 @@ func (c *UsuarioController) Atualizar(ctx *gin.Context) {
 	if input.Avatar != "" {
 		usuario.Avatar = input.Avatar
 	}
+	if input.Cpf != "" {
+		usuario.Cpf = input.Cpf
+	}
 
 	usuarioAtualizado, err := c.usuarioService.Atualizar(usuario)
 	if err != nil {
@@ -180,6 +186,7 @@ func (c *UsuarioController) Atualizar(ctx *gin.Context) {
 		"nome":             usuarioAtualizado.Nome,
 		"email":            usuarioAtualizado.Email,
 		"cargo":            usuarioAtualizado.Cargo,
+		"cpf":              usuarioAtualizado.Cpf,
 		"ultimo_login":     usuarioAtualizado.UltimoLogin,
 		"dataAdmissao":     usuarioAtualizado.DataAdmissao,
 		"data_criacao":     usuarioAtualizado.CreatedAt,
