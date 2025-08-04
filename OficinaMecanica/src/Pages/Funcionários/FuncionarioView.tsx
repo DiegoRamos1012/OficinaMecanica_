@@ -21,6 +21,7 @@ const FuncionariosView = ({
 }: FuncionariosViewProps) => {
   const [cpf, setCpf] = useState<string | null>(null);
   const [cpfError, setCpfError] = useState<string | null>(null);
+  const [editandoCpf, setEditandoCpf] = useState(false);
   const toast = useRef<Toast>(null);
 
   useEffect(() => {
@@ -59,7 +60,7 @@ const FuncionariosView = ({
     <>
       <Toast ref={toast} />
       <Dialog
-        header="Crachá do Funcionário"
+        header="Dados do Funcionário"
         visible={visible}
         onHide={onHide}
         modal
@@ -81,84 +82,109 @@ const FuncionariosView = ({
             <div className="cracha-cargo">{usuario?.cargo ?? ""}</div>
           </div>
           <div className="p-field mb-2">
-            <span
-              style={{
-                fontWeight: 600,
-                color: "var(--primary)",
-              }}
-            >
-              ID:
-            </span>{" "}
-            <span>{usuario?.id ?? ""}</span>
-          </div>
-          <div className="p-field mb-2">
-            <span
-              style={{
-                fontWeight: 600,
-                color: "var(--primary)",
-              }}
-            >
+            <span style={{ fontWeight: 600, color: "var(--primary)" }}>
               Email:
             </span>{" "}
-            <span>{usuario?.email ?? ""}</span>
+            <span style={{ color: "var(--text-light)" }}>
+              {usuario?.email ?? ""}
+            </span>
           </div>
           <div className="p-field mb-2">
-            <span
-              style={{
-                fontWeight: 600,
-                color: "var(--primary)",
-              }}
-            >
+            <span style={{ fontWeight: 600, color: "var(--primary)" }}>
               Status:
             </span>{" "}
-            <span>{usuario?.status ?? ""}</span>
+            <span style={{ color: "var(--text-light)" }}>
+              {usuario?.status ?? ""}
+            </span>
           </div>
           <div className="p-field mb-2">
-            <span
-              style={{
-                fontWeight: 600,
-                color: "var(--primary)",
-              }}
-            >
+            <span style={{ fontWeight: 600, color: "var(--primary)" }}>
               Férias:
             </span>{" "}
-            <span>{usuario?.ferias ? "Sim" : "Não"}</span>
+            <span style={{ color: "var(--text-light)" }}>
+              {usuario?.ferias ? "Sim" : "Não"}
+            </span>
           </div>
           <div className="p-field mb-2">
-            <span
-              style={{
-                fontWeight: 600,
-                color: "var(--primary)",
-              }}
-            >
+            <span style={{ fontWeight: 600, color: "var(--primary)" }}>
               Data de Admissão:
             </span>{" "}
-            <span>
+            <span style={{ color: "var(--text-light)" }}>
               {usuario?.dataAdmissao
                 ? new Date(usuario.dataAdmissao).toLocaleDateString("pt-BR")
                 : ""}
             </span>
           </div>
-          <div className="p-field mb-2">
-            <label
-              htmlFor="cpf"
-              style={{
-                fontWeight: 600,
-                color: "var(--primary)",
-              }}
-            >
+          <div
+            className="p-field mb-2"
+            style={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              gap: 8,
+            }}
+          >
+            <span style={{ fontWeight: 600, color: "var(--primary)" }}>
               CPF:
-            </label>
-            <InputText
-              id="cpf"
-              value={cpf || ""}
-              onChange={(e) => setCpf(e.target.value)}
-              maxLength={11}
-              placeholder="Digite o CPF"
-              style={{ width: "100%", marginTop: 4, marginBottom: 0 }}
-              className={cpfError ? "p-invalid" : ""}
-            />
-            {cpfError && <small style={{ color: "red" }}>{cpfError}</small>}
+            </span>
+            {editandoCpf ? (
+              <>
+                <InputText
+                  id="cpf"
+                  value={cpf || ""}
+                  onChange={(e) => setCpf(e.target.value)}
+                  maxLength={11}
+                  placeholder="Digite o CPF"
+                  style={{ width: 120, marginTop: 0, marginBottom: 0 }}
+                  className={cpfError ? "p-invalid" : ""}
+                />
+                <Button
+                  icon="pi pi-check"
+                  className="p-button-text p-button-sm"
+                  onClick={handleSave}
+                  style={{ marginLeft: 4 }}
+                />
+                <Button
+                  icon="pi pi-times"
+                  className="p-button-text p-button-sm"
+                  onClick={() => {
+                    setEditandoCpf(false);
+                    setCpf(usuario?.cpf || "");
+                    setCpfError(null);
+                  }}
+                />
+                {cpfError && (
+                  <small style={{ color: "red", display: "block" }}>
+                    {cpfError}
+                  </small>
+                )}
+              </>
+            ) : (
+              <>
+                <span style={{ marginLeft: 1, color: "var(--text-light)" }}>
+                  {cpf ? cpf : "Nenhum CPF cadastrado a este usuário"}
+                </span>
+                <Button
+                  icon="pi pi-pencil"
+                  className="p-button-text p-button-sm"
+                  onClick={() => setEditandoCpf(true)}
+                  style={{
+                    marginLeft: 4,
+                    background: "transparent",
+                    boxShadow: "none",
+                    border: "none",
+                    padding: 0,
+                    minWidth: 0,
+                    width: 24,
+                    height: 24,
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                  }}
+                  aria-label="Editar CPF"
+                />
+              </>
+            )}
           </div>
         </div>
         <div
@@ -166,11 +192,6 @@ const FuncionariosView = ({
           style={{ justifyContent: "flex-end", gap: 8 }}
         >
           <Button label="Fechar" className="p-button-text" onClick={onHide} />
-          <Button
-            label="Salvar CPF"
-            className="p-button-success"
-            onClick={handleSave}
-          />
         </div>
       </Dialog>
     </>

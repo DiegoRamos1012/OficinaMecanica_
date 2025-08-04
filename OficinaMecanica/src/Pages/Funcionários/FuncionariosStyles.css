@@ -285,6 +285,6 @@ body.theme-dark .p-datepicker .p-datepicker-today span {
   margin-top: 8px;
 }
 .cracha-cargo {
-  color: #888;
+  color: var(--text-light);
   font-size: 14px;
 }
