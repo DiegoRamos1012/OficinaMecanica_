@@ -24,3 +24,4 @@ mysql_data/
 
 # Env files
 .env
+.test.env
