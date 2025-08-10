@@ -12,12 +12,16 @@ import { formatDate } from "../../utils/format";
 import { User } from "../../types/types";
 import FuncionariosEdit from "./FuncionariosEdit";
 import FuncionariosView from "./FuncionarioView";
+import { Tooltip } from "primereact/tooltip";
+import FuncionariosDelete from "./FuncionariosDelete";
 
 const Funcionarios = () => {
   const [usuarios, setUsuarios] = useState<User[]>([]);
   const [loading, setLoading] = useState(true);
   const [showEditDialog, setShowEditDialog] = useState(false);
   const [showViewDialog, setShowViewDialog] = useState(false);
+  const [showDeleteDialog, setShowDeleteDialog] = useState(false);
+  const [loadingDelete, setLoadingDelete] = useState(false);
   const [usuarioSelecionado, setUsuarioSelecionado] = useState<User | null>(
     null
   );
@@ -30,13 +34,10 @@ const Funcionarios = () => {
         setError(null);
         const token = localStorage.getItem("@OficinaMecanica:token");
         const response = await api.get<User[]>("/usuarios", {
-          headers: {
-            Authorization: token ? `Bearer ${token}` : "",
-          },
+          headers: { Authorization: token ? `Bearer ${token}` : "" },
         });
         setUsuarios(response.data);
-      } catch (err) {
-        console.error("[Funcionarios] Erro ao carregar usuários:", err);
+      } catch {
         setError("Erro ao carregar usuários.");
       } finally {
         setLoading(false);
@@ -44,6 +45,57 @@ const Funcionarios = () => {
     };
     fetchUsuarios();
   }, []);
+
+  const handleEditUsuario = (usuario: User) => {
+    setUsuarioSelecionado(usuario);
+    setShowEditDialog(true);
+  };
+
+  const handleViewUsuario = (usuario: User) => {
+    setUsuarioSelecionado(usuario);
+    setShowViewDialog(true);
+  };
+
+  const handleCloseDeleteDialog = () => {
+    setShowDeleteDialog(false);
+    setUsuarioSelecionado(null);
+  };
+
+  const handleDeleteUsuario = async (id: number) => {
+    setLoadingDelete(true);
+    try {
+      const token = localStorage.getItem("@OficinaMecanica:token");
+      await api.delete(`/usuarios/${id}`, {
+        headers: { Authorization: token ? `Bearer ${token}` : "" },
+      });
+      const response = await api.get<User[]>("/usuarios", {
+        headers: { Authorization: token ? `Bearer ${token}` : "" },
+      });
+      setUsuarios(response.data);
+      setShowDeleteDialog(false);
+      setUsuarioSelecionado(null);
+    } catch {
+      setError("Erro ao excluir usuário.");
+    } finally {
+      setLoadingDelete(false);
+    }
+  };
+
+  const handleSaveUsuario = async (dados: Partial<User>) => {
+    if (!dados.id) return;
+    try {
+      const token = localStorage.getItem("@OficinaMecanica:token");
+      await api.put(`/usuarios/${dados.id}`, dados, {
+        headers: { Authorization: token ? `Bearer ${token}` : "" },
+      });
+      const response = await api.get<User[]>("/usuarios", {
+        headers: { Authorization: token ? `Bearer ${token}` : "" },
+      });
+      setUsuarios(response.data);
+    } catch {
+      setError("Erro ao salvar usuário.");
+    }
+  };
 
   const dataAdmissaoBody = (rowData: User) => {
     if (!rowData.dataAdmissao) return "-";
@@ -54,7 +106,6 @@ const Funcionarios = () => {
   const statusBodyTemplate = (rowData: User) => {
     const status = rowData.status || "";
     let statusSeverity: "success" | "danger" | "warning" = "danger";
-
     switch (status.toLowerCase()) {
       case "ativo":
         statusSeverity = "success";
@@ -68,67 +119,48 @@ const Funcionarios = () => {
       default:
         statusSeverity = "danger";
     }
-
     return <Tag value={status} severity={statusSeverity} />;
   };
 
-  const feriasBodyTemplate = (rowData: User) => {
-    return rowData.ferias ? (
+  const feriasBodyTemplate = (rowData: User) =>
+    rowData.ferias ? (
       <Tag value="Sim" severity="warning" />
     ) : (
       <Tag value="Não" severity="success" />
     );
-  };
 
-  const handleEditUsuario = (usuario: User) => {
-    setUsuarioSelecionado(usuario);
-    setShowEditDialog(true);
-  };
+  const actionBodyTemplate = (rowData: User) => (
+    <div className="action-buttons">
+      <Tooltip
+        target=".btnViewFuncionario, .btnEditFuncionario, .btnDeleteFuncionario"
+        position="top"
+        className="p-tooltip"
+      />
+      <Button
+        icon="pi pi-eye"
+        className="p-button-rounded p-button-info p-button-sm mr-2 btnViewFuncionario"
+        onClick={() => handleViewUsuario(rowData)}
+        data-pr-tooltip="Visualizar detalhes do funcionário"
+      />
+      <Button
+        icon="pi pi-pencil"
+        className="p-button-rounded p-button-success p-button-sm mr-2 btnEditFuncionario"
+        onClick={() => handleEditUsuario(rowData)}
+        data-pr-tooltip="Editar dados do funcionário"
+      />
+      <Button
+        icon="pi pi-trash"
+        className="p-button-rounded p-button-danger p-button-sm btnDeleteFuncionario"
+        onClick={() => {
+          setUsuarioSelecionado(rowData);
+          setShowDeleteDialog(true);
+        }}
+        data-pr-tooltip="Deletar Funcionário"
+      />
+    </div>
+  );
 
-  const handleViewUsuario = (usuario: User) => {
-    setUsuarioSelecionado(usuario)
-    setShowViewDialog(true)
-  }
-
-  const handleSaveUsuario = async (dados: Partial<User>) => {
-    if (!dados.id) return;
-    try {
-      const token = localStorage.getItem("@OficinaMecanica:token");
-      await api.put(`/usuarios/${dados.id}`, dados, {
-        headers: { Authorization: token ? `Bearer ${token}` : "" },
-      });
-      // Atualiza lista após edição
-      const response = await api.get<User[]>("/usuarios", {
-        headers: { Authorization: token ? `Bearer ${token}` : "" },
-      });
-      setUsuarios(response.data);
-    } catch (err) {
-      console.log("Erro ao salvar usuário: ", err);
-    }
-  };
-
-  const actionBodyTemplate = (rowData: User) => {
-    return (
-      <div className="action-buttons">
-        <Button
-          icon="pi pi-eye"
-          className="p-button-rounded p-button-info p-button-sm mr-2"
-          onClick={() => handleViewUsuario(rowData)}
-        />
-        <Button
-          icon="pi pi-pencil"
-          className="p-button-rounded p-button-success p-button-sm mr-2"
-          onClick={() => handleEditUsuario(rowData)}
-        />
-        <Button
-          icon="pi pi-trash"
-          className="p-button-rounded p-button-danger p-button-sm"
-        />
-      </div>
-    );
-  };
-
-  // Cálculo dinâmico dos cards
+  // Cards resumo
   const totalFuncionarios = usuarios.length;
   const totalMecanicos = usuarios.filter((u) =>
     u.cargo?.toLowerCase().includes("mecânico")
@@ -148,13 +180,7 @@ const Funcionarios = () => {
             Carregando funcionários...
           </div>
         ) : error ? (
-          <div
-            style={{
-              color: "red",
-              textAlign: "center",
-              margin: "2rem",
-            }}
-          >
+          <div style={{ color: "red", textAlign: "center", margin: "2rem" }}>
             {error}
           </div>
         ) : (
@@ -265,6 +291,13 @@ const Funcionarios = () => {
           onHide={() => setShowViewDialog(false)}
           usuario={usuarioSelecionado}
           onSave={handleSaveUsuario}
+        />
+        <FuncionariosDelete
+          visible={showDeleteDialog}
+          usuario={usuarioSelecionado ?? undefined}
+          onHide={handleCloseDeleteDialog}
+          onDelete={handleDeleteUsuario}
+          loading={loadingDelete}
         />
       </div>
     </div>

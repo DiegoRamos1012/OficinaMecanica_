@@ -14,6 +14,13 @@
   padding: 2rem 2rem 1.5rem 2rem !important;
   background: var(--background-alt);
 }
+.funcionarios-dialog .p-dialog-footer {
+  background: var(--background-alt) !important;
+}
+.funcionarios-dialog .p-dialog {
+  background: var(--background-alt) !important;
+  border-radius: 12px;
+}
 .funcionarios-dialog .p-dialog-header {
   background: var(--primary);
   color: var(--text-light);

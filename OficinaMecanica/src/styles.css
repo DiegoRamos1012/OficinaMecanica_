@@ -159,6 +159,13 @@ button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
 }
 
+.p-tooltip { /* Estilo pra Tooltips (balões de dicas quando o cursor está acima do botão) */
+  font-size: 0.75rem ;
+  padding: 4px 8px;
+  max-width: 140px ;
+  border-radius: 4px;
+}
+
 /* Media query para tema claro */
 @media (prefers-color-scheme: light) {
   :root {
